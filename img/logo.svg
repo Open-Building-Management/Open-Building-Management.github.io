@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="100mm"
-   height="40mm"
-   viewBox="0 0 100 40"
+   width="135mm"
+   height="17mm"
+   viewBox="0 0 135 17"
    version="1.1"
    id="svg1593"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="208.24671"
-     inkscape:cy="455.11013"
+     inkscape:zoom="1.4"
+     inkscape:cx="202.06616"
+     inkscape:cy="154.60715"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -54,28 +54,20 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-257)">
+     transform="translate(0,-280)">
     <text
        id="text6509"
-       y="264.9183"
-       x="8.8094177"
+       y="283.66519"
+       x="2.3336565"
        transform="scale(0.96306937,1.0383468)"
        style="font-style:normal;font-variant:normal;font-weight:400;font-size:6.01436329px;line-height:125%;font-family:'Liberation Sans';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22589155"
        xml:space="preserve"><tspan
-         y="264.9183"
-         x="8.8094177"
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7555542px;line-height:84.1999948%;font-family:'Terminator Two';-inkscape-font-specification:'Terminator Two';fill:#000000;stroke-width:0.22589155"
-         id="tspan946">OBM</tspan><tspan
-         y="272.43625"
-         x="8.8094177"
+         y="283.66519"
+         x="2.3336565"
          sodipodi:role="line"
          style="font-style:normal;font-variant:normal;font-weight:400;font-size:7.05555534px;line-height:84.1999948%;font-family:'Liberation Sans';fill:#000000;stroke-width:0.22589155"
-         id="tspan5694"> </tspan><tspan
-         y="279.95422"
-         x="8.8094177"
-         sodipodi:role="line"
-         style="font-style:normal;font-variant:normal;font-weight:400;font-size:7.05555534px;line-height:84.1999948%;font-family:'Liberation Sans';fill:#000000;stroke-width:0.22589155"
-         id="tspan940">Open Building Management</tspan></text>
+         id="tspan940"><tspan
+   id="tspan2169"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7555542px;line-height:84.1999948%;font-family:'Terminator Two';-inkscape-font-specification:'Terminator Two';fill:#000000;stroke-width:0.22589155">OBM</tspan> Open Building Management</tspan></text>
   </g>
 </svg>

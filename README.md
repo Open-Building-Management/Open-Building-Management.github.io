@@ -1,3 +1,3 @@
 # http://open-building-management.github.io/
 
-open-building-management.github.io/collada.html
+http://open-building-management.github.io/collada.html

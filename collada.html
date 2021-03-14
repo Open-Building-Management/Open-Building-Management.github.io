@@ -25,135 +25,114 @@
             <div class="row" id="cta"></div>
         </div>
 
-		<script type="module">
+	<script type="module">
 
-			import * as THREE from './lib/three.module.js';
+	import * as THREE from './lib/three.module.js';
 
-			//import Stats from './jsm/libs/stats.module.js';
-            //import { GUI } from './jsm/libs/dat.gui.module.js';
+        //import { GUI } from './jsm/libs/dat.gui.module.js';
 
-			import { OrbitControls } from './lib/controls/OrbitControls.js';
+	import { OrbitControls } from './lib/controls/OrbitControls.js';
 
-			import { ColladaLoader } from './lib/loaders/ColladaLoader.js';
+	import { ColladaLoader } from './lib/loaders/ColladaLoader.js';
 
-			let container, stats, clock;
-			let camera, scene, renderer, elf;
+	let container, stats, clock;
+	let camera, scene, renderer, elf;
 
-			init();
-            //render();
-			animate();
+	init();
+        //render();
+	animate();
 
-			function init() {
+	function init() {
 
-				container = document.getElementById( 'cta' );
+	    container = document.getElementById( 'cta' );
+            info = document.getElelementById( 'info' );
 
-				camera = new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 0.1, 2000 );
-				camera.position.set( -3, 0, -6 );
-				camera.lookAt( 0, 0, 0 );
+	    camera = new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 0.1, 2000 );
+	    camera.position.set( -3, 0, -6 );
+	    camera.lookAt( 0, 0, 0 );
 
-				scene = new THREE.Scene();
-                scene.background = new THREE.Color( 0xcbdbf4 );
-                //const helper = new THREE.CameraHelper( camera );
-                //scene.add( helper );
+	    scene = new THREE.Scene();
+            scene.background = new THREE.Color( 0xcbdbf4 );
+            //const helper = new THREE.CameraHelper( camera );
+            //scene.add( helper );
                 
 
-				//clock = new THREE.Clock();
+	    //clock = new THREE.Clock();
 
-				// loading manager
+	    // loading manager
 
-				const loadingManager = new THREE.LoadingManager( function () {
+	    const loadingManager = new THREE.LoadingManager( function () {
 
-					scene.add( elf );
+	        scene.add( elf );
 
-				} );
+	    } );
 
-				// collada
+	    // collada
 
-				const loader = new ColladaLoader( loadingManager );
-				//loader.load( './models/collada/elf/elf.dae', function ( collada ) {
-                //loader.load( './models/collada/chaufferie.dae', function ( collada ) {
-                loader.load( './collada/HVAC.dae', function ( collada ) {
+	    const loader = new ColladaLoader( loadingManager );
+	    //loader.load( './models/collada/elf/elf.dae', function ( collada ) {
+            //loader.load( './models/collada/chaufferie.dae', function ( collada ) {
+            loader.load( './collada/HVAC.dae', function ( collada ) {
 
-					elf = collada.scene;
+	        elf = collada.scene;
 
-				} );
+	    } );
 
-				//087656
+	    //087656
 
-				const ambientLight = new THREE.AmbientLight( 0xffffff, 0.4 );
-				scene.add( ambientLight );
+	    const ambientLight = new THREE.AmbientLight( 0xffffff, 0.4 );
+	    scene.add( ambientLight );
 
-				const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-				directionalLight.position.set( 1, 1, 0 ).normalize();
-				scene.add( directionalLight );
+	    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+	    directionalLight.position.set( 1, 1, 0 ).normalize();
+	    scene.add( directionalLight );
 
-				//
+	    //
+            minus = $(info).height();
+            renderer = new THREE.WebGLRenderer( { antialias: true } );
+	    renderer.setPixelRatio( window.devicePixelRatio );
+	    renderer.setSize( window.innerWidth, window.innerHeight - minus);
+	    renderer.localClippingEnabled = true;
+	    //document.body.appendChild( renderer.domElement );
                 
-                renderer = new THREE.WebGLRenderer( { antialias: true } );
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				renderer.localClippingEnabled = true;
-				//document.body.appendChild( renderer.domElement );
+            const controls = new OrbitControls( camera, renderer.domElement );
+	    controls.addEventListener( 'change', render ); // use only if there is no animation loop
+	    controls.minDistance = 1;
+	    controls.maxDistance = 10;
+	    controls.enablePan = false;
                 
-                const controls = new OrbitControls( camera, renderer.domElement );
-				controls.addEventListener( 'change', render ); // use only if there is no animation loop
-				controls.minDistance = 1;
-				controls.maxDistance = 10;
-				controls.enablePan = false;
-                
-                container.appendChild( renderer.domElement );
-                /*
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				container.appendChild( renderer.domElement );
-                */
-				//
+            container.appendChild( renderer.domElement );
 
-				//stats = new Stats();
-				//container.appendChild( stats.dom );
+	    window.addEventListener( 'resize', onWindowResize );
 
-				//
+	}
 
-				window.addEventListener( 'resize', onWindowResize );
+	function onWindowResize() {
+            info = document.getElementById( 'info' );
+            minus = $(info).height();
 
-			}
+            camera.aspect = window.innerWidth / window.innerHeight;
+	    camera.updateProjectionMatrix();
 
-			function onWindowResize() {
+	     renderer.setSize( window.innerWidth, window.innerHeight - minus );        
 
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-                
-
-			}
+	}
             
-			function animate() {
+	function animate() {
 
-				requestAnimationFrame( animate );
+	    requestAnimationFrame( animate );
 
-				render();
-				//stats.update();
+	    render();
 
-			}
+	}
             
-			function render() {
-                /*
-				const delta = clock.getDelta();
+	function render() {
+            var vector = camera.position.clone();
+            console.log(vector);
+	    renderer.render( scene, camera );
 
-				if ( elf !== undefined ) {
+	}
 
-					elf.rotation.z += delta * 0.5;
-
-				}
-                */
-                var vector = camera.position.clone();
-                console.log(vector);
-				renderer.render( scene, camera );
-
-			}
-
-		</script>
+	</script>
 	</body>
 </html>

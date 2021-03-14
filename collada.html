@@ -25,114 +25,109 @@
     <div class="row" id="cta"></div>
 </div>
 
-	<script type="module">
+<script type="module">
 
-	import * as THREE from './lib/three.module.js';
+import * as THREE from './lib/three.module.js';
+//import { GUI } from './jsm/libs/dat.gui.module.js';
+import { OrbitControls } from './lib/controls/OrbitControls.js';
+import { ColladaLoader } from './lib/loaders/ColladaLoader.js';
 
-        //import { GUI } from './jsm/libs/dat.gui.module.js';
+let container, stats, clock;
+let camera, scene, renderer, elf;
 
-	import { OrbitControls } from './lib/controls/OrbitControls.js';
+init();
+//render();
+animate();
 
-	import { ColladaLoader } from './lib/loaders/ColladaLoader.js';
+function init() {
 
-	let container, stats, clock;
-	let camera, scene, renderer, elf;
+    container = document.getElementById( 'cta' );
+    info = document.getElementById( 'info' );
 
-	init();
-        //render();
-	animate();
+	  camera = new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 0.1, 2000 );
+		camera.position.set( 2.5, 4.5, -7 );
+	  //camera.position.set( -3, 0, -6 );
+	  camera.lookAt( 0, 0, 0 );
 
-	function init() {
+	  scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0xcbdbf4 );
+    //const helper = new THREE.CameraHelper( camera );
+    //scene.add( helper );
 
-	    container = document.getElementById( 'cta' );
-        info = document.getElementById( 'info' );
+	  // loading manager
 
-	    camera = new THREE.PerspectiveCamera( 65, window.innerWidth / window.innerHeight, 0.1, 2000 );
-	    camera.position.set( -3, 0, -6 );
-	    camera.lookAt( 0, 0, 0 );
+	  const loadingManager = new THREE.LoadingManager( function () {
 
-	    scene = new THREE.Scene();
-        scene.background = new THREE.Color( 0xcbdbf4 );
-        //const helper = new THREE.CameraHelper( camera );
-        //scene.add( helper );
+	      scene.add( elf );
 
+	  } );
 
-	    //clock = new THREE.Clock();
+	  // loading the collada file produced with sketchup
 
-	    // loading manager
+	  const loader = new ColladaLoader( loadingManager );
+	  //loader.load( './models/collada/elf/elf.dae', function ( collada ) {
+    //loader.load( './models/collada/chaufferie.dae', function ( collada ) {
+    loader.load( './collada/HVAC.dae', function ( collada ) {
 
-	    const loadingManager = new THREE.LoadingManager( function () {
+	      elf = collada.scene;
 
-	        scene.add( elf );
+	  } );
 
-	    } );
+	  //087656
 
-	    // collada
+	  const ambientLight = new THREE.AmbientLight( 0xffffff, 0.4 );
+	  scene.add( ambientLight );
 
-	    const loader = new ColladaLoader( loadingManager );
-	    //loader.load( './models/collada/elf/elf.dae', function ( collada ) {
-        //loader.load( './models/collada/chaufferie.dae', function ( collada ) {
-        loader.load( './collada/HVAC.dae', function ( collada ) {
+	  const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+	  directionalLight.position.set( 1, 1, 0 ).normalize();
+	  scene.add( directionalLight );
 
-	        elf = collada.scene;
+	  //
+    var minus = $(info).height();
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+	  renderer.setPixelRatio( window.devicePixelRatio );
+	  renderer.setSize( window.innerWidth, window.innerHeight - minus);
+	  renderer.localClippingEnabled = true;
+	  //document.body.appendChild( renderer.domElement );
 
-	    } );
+    const controls = new OrbitControls( camera, renderer.domElement );
+	  controls.addEventListener( 'change', render ); // use only if there is no animation loop
+	  controls.minDistance = 1;
+	  controls.maxDistance = 10;
+	  controls.enablePan = false;
 
-	    //087656
+    container.appendChild( renderer.domElement );
 
-	    const ambientLight = new THREE.AmbientLight( 0xffffff, 0.4 );
-	    scene.add( ambientLight );
+	  window.addEventListener( 'resize', onWindowResize );
 
-	    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-	    directionalLight.position.set( 1, 1, 0 ).normalize();
-	    scene.add( directionalLight );
+}
 
-	    //
-        var minus = $(info).height();
-        renderer = new THREE.WebGLRenderer( { antialias: true } );
-	    renderer.setPixelRatio( window.devicePixelRatio );
-	    renderer.setSize( window.innerWidth, window.innerHeight - minus);
-	    renderer.localClippingEnabled = true;
-	    //document.body.appendChild( renderer.domElement );
+function onWindowResize() {
+    info = document.getElementById( 'info' );
+    var minus = $(info).height();
 
-        const controls = new OrbitControls( camera, renderer.domElement );
-	    controls.addEventListener( 'change', render ); // use only if there is no animation loop
-	    controls.minDistance = 1;
-	    controls.maxDistance = 10;
-	    controls.enablePan = false;
+    camera.aspect = window.innerWidth / window.innerHeight;
+	  camera.updateProjectionMatrix();
 
-        container.appendChild( renderer.domElement );
+	  renderer.setSize( window.innerWidth, window.innerHeight - minus );
 
-	    window.addEventListener( 'resize', onWindowResize );
+}
 
-	}
+function animate() {
 
-	function onWindowResize() {
-        info = document.getElementById( 'info' );
-        var minus = $(info).height();
+	  requestAnimationFrame( animate );
 
-        camera.aspect = window.innerWidth / window.innerHeight;
-	    camera.updateProjectionMatrix();
+	  render();
 
-	    renderer.setSize( window.innerWidth, window.innerHeight - minus );
+}
 
-	}
+function render() {
+    var vector = camera.position.clone();
+    console.log(vector);
+	  renderer.render( scene, camera );
 
-	function animate() {
+}
 
-	    requestAnimationFrame( animate );
-
-	    render();
-
-	}
-
-	function render() {
-        var vector = camera.position.clone();
-        console.log(vector);
-	    renderer.render( scene, camera );
-
-	}
-
-	</script>
-	</body>
+</script>
+</body>
 </html>

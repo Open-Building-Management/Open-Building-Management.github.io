@@ -11,7 +11,7 @@
 <body>
 <div class="container-fluid">
     <div class="row" id="info">
-	Chez OBM, nous nous occupons de vos systèmes énergétiques, chaudières, centrales de traitement d'air.
+        Chez OBM, nous nous occupons de vos systèmes énergétiques, chaudières, centrales de traitement d'air.
         Nous en supervisons le fonctionnement et faisons le lien avec votre exploitant pour la maintenance préventive.
         Nos algorithmes d'intelligence artificielle optimisent la distribution dans vos bâtiments, pour vous permettre d'économiser de l'énergie sans aucune dégradation du confort.
     </div>
@@ -45,7 +45,7 @@ function init() {
     scene.background = new THREE.Color( 0xcbdbf4 );
     //const helper = new THREE.CameraHelper( camera );
     //scene.add( helper );
-    
+
     // loading the collada file produced with sketchup
     const loadingManager = new THREE.LoadingManager( function () {
         scene.add( hvac );
@@ -55,7 +55,7 @@ function init() {
     loader.load( './collada/HVAC.dae', function ( collada ) {
         hvac = collada.scene;
     } );
-    
+
     //087656
     const ambientLight = new THREE.AmbientLight( 0xffffff, 0.4 );
     scene.add( ambientLight );

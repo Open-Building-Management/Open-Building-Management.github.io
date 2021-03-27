@@ -126,7 +126,7 @@ svg.append("clipPath")
 const div = d3.select("body").append("div")
     .attr("class", "tooltip") 
     .style("opacity", 0);
-
+/*
 //on peut utiliser d3.json qui a l'air de fonctionner de manière asynchrone  
 //dans ce cas, pas besoin d'utiliser jquery      
 d3.json(biosapi, function(data) {
@@ -180,7 +180,7 @@ d3.json(biosapi, function(data) {
         }
     });
 });
-/*
+*/
 $.ajax({ 
     url: biosapi,
     dataType: "json",
@@ -238,7 +238,7 @@ $.ajax({
         });
     }
 });
-*/
+
 
 </script>
 </body>

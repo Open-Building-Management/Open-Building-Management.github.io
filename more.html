@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body { font: 12px Arial;}
+
+path { 
+    stroke-width: 1;
+    fill: none;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+}
+
+.axisRed text{
+  fill: red;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+	color: white;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: grey;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+	}
+
+</style>
+<body>
+<!--<script src="https://d3js.org/cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<div id="chart"></div>
+<div id="heating"></div>
+<script>
+
+var ts = 1611845100;
+//var ts = 1612039200;
+var url = "http://allierhab.ddns.net";
+var biosapi = url+"/bios?ts="+ts+"&interval=3600";
+
+// tailles en pixel
+var largeur = 600;
+var hauteur = 160;
+// all the margins
+margin = ({top: 10, right: 50, bottom: 20, left: 50})
+// the y scales
+var min = 17;
+var max = 21;
+
+// création d'un svg responsif
+const svg = d3
+    .select("#chart")
+    .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", [0, 0, largeur, hauteur])
+        
+// création de 3 échelles linéaires : une pour les abscisses, 2 pour les ordonnées (gauche + droite)
+var x = d3.scaleLinear()
+    .domain([0, 167])
+    .range([margin.left, largeur - margin.right]);
+var y = d3.scaleLinear()
+    .domain([min, max])
+    .range([hauteur - margin.bottom, margin.top]);
+var yr = d3.scaleLinear()
+    .domain([-10, 100])
+    .range([hauteur - margin.bottom, margin.top]);
+        
+// axe des abscisses
+var x_axis = d3.axisBottom().scale(x);
+var xAxisYtranslate = hauteur - margin.bottom;
+svg.append("g")
+    .attr("transform", "translate(0," + xAxisYtranslate + ")")
+    .call(x_axis);
+    
+//axes des ordonnées
+var y_axis = d3.axisLeft().scale(y);
+svg.append("g")
+    .attr("transform", "translate(" + margin.left + ", 0)")
+    .style("stroke", "black")
+    .call(y_axis);
+ 
+var yr_axis = d3.axisRight().scale(yr);
+var yrAxisXtranslate = largeur - margin.right; 
+svg.append("g")
+    .attr("transform", "translate(" + yrAxisXtranslate + ", 0)")
+    .attr("class", "axisRed")
+    .call(yr_axis);
+
+// Set the gradient - seulement sur y
+svg.append("linearGradient")
+    .attr("id", "line-gradient")
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("x1", 0)
+    .attr("y1", y(min))
+    .attr("x2", 0)
+    .attr("y2", y(max))
+    .selectAll("stop")
+        .data([
+          {offset: "0%", color: "blue"},
+          {offset: "50%", color: "green"},
+          {offset: "75%", color: "yellow"},
+          {offset: "100%", color: "red"}
+        ])
+    .enter().append("stop")
+        .attr("offset", function(d) { return d.offset; })
+        .attr("stop-color", function(d) { return d.color; });
+
+//création d'un masque  
+svg.append("clipPath")
+        .attr("id", "cliprange")
+    .append("rect")
+        .attr("x", margin.left)
+        .attr("y", margin.top)
+        .attr("width", largeur - margin.left - margin.right)
+        .attr("height", hauteur - margin.top - margin.bottom);
+        
+const div = d3.select("body").append("div")
+    .attr("class", "tooltip") 
+    .style("opacity", 0);
+
+//on peut utiliser d3.json qui a l'air de fonctionner de manière asynchrone  
+//dans ce cas, pas besoin d'utiliser jquery      
+d3.json(biosapi, function(data) {
+    $.each(data, function (circuitName, item) {
+        if (item["Tint"]){
+            const d = [];
+            for (let i = 0; i < 168; ++i) {
+                element = {};
+                element.x = x(i);
+                element.Tint = y(item["Tint"][i]);
+                element.agenda = y(20*item["agenda"][i]);
+                d.push(element);
+            }
+            // les courbes de température
+            var lineTint = d3.line()
+                .x(d => d.x)
+                .y(d => d.Tint);
+            
+            //matérialisation des zones de présence du personnel
+            var area = d3.area()
+                .x(d => d.x)
+                .y0(hauteur-margin.bottom)
+                .y1(d => d.agenda);
+            
+            svg.append("path")
+                .datum(d)
+                .style("fill", "orange")
+                .style("opacity", 0.1)
+                .attr("clip-path", "url(#cliprange)")
+                .attr("d", area);
+            
+            svg.append("path")
+                .datum(d)
+                .attr("id", circuitName)
+                .attr("clip-path", "url(#cliprange)")
+                .attr("stroke", "url(#line-gradient)")
+                .attr("d", lineTint)
+                .on("mouseover", function() {
+                    div.transition()        
+                        .duration(200)      
+                        .style("opacity", .9);
+                    div.html("circuit: "+circuitName+"<br>Hello all")
+                        .style("left", (d3.event.pageX + 30) + "px")     
+                        .style("top", (d3.event.pageY - 60) + "px");
+                })
+                .on("mouseout", function(d) {
+                    div.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                });
+        }
+    });
+});
+/*
+$.ajax({ 
+    url: biosapi,
+    dataType: "json",
+    async: true,
+    success(data) {
+        $.each(data, function (circuitName, item) {
+            console.log(circuitName);
+            if (!item["Tint"]){
+                console.log("pas de données, on passe à la suite");
+            } else {
+                console.log("Ok");
+                //on teste 2 méthodes : array ou array d'objets json
+                const Tint = [];
+                const agenda = [];
+                const d = []
+                for (let i = 0; i < 168; ++i) {
+                    Tint.push([x(i), y(item["Tint"][i])]);
+                    element = {};
+                    element.x = x(i);
+                    element.Tint = y(item["Tint"][i]);
+                    element.agenda = y(20*item["agenda"][i]);
+                    d.push(element);
+                }
+                // création d'une courbe à partir d'un array                
+                lineTint = d3.line()(Tint);
+                
+                //remplissage par une couleur de la zone sous la courbe
+                var area = d3.area()
+                    .x(d => d.x)
+                    .y0(hauteur-margin.bottom)
+                    .y1(d => d.agenda);
+                    
+                //création d'un histogramme
+                svg.selectAll()
+                    .data(d)
+                    .enter()
+                        .append("rect")
+                        .attr("x", d => d.x)
+                        .attr("y", d => d.agenda)
+                        .attr("width", 0.1)
+                        .attr("height", hauteur - margin.bottom);
+                
+                svg.append("path")
+                    .datum(d)
+                    .style("fill", "orange")
+                    .style("opacity", 0.1)
+                    .attr("clip-path", "url(#cliprange)")
+                    .attr("d", area);
+                
+                svg.append("path")
+                    .attr("clip-path", "url(#cliprange)")
+                    .attr("stroke", "url(#line-gradient)")
+                    .attr("d", lineTint);
+            }
+        });
+    }
+});
+*/
+
+</script>
+</body>

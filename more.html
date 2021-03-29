@@ -4,7 +4,7 @@
 
 body { font: 12px Arial;}
 
-path { 
+path {
     stroke-width: 1;
     fill: none;
 }
@@ -35,25 +35,52 @@ div.tooltip {
 
 </style>
 <body>
-<!--<script src="https://d3js.org/cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>-->
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
+<!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
+<script src="lib/d3.v6.min.js"></script>
 <script src="lib/jquery-3.5.1.min.js"></script>
+<link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
 <script src="lib/bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
 <div class="container-fluid">
     <div class="row-sm" id="info">
-        <img src=img/logo.svg class="img-fluid">
+      <table class="table">
+          <tr><td><img src=img/logo.svg class="img-fluid"></td></tr>
+          <tr><td>
+            Usefull links :
+            <a href=https://d3js.org/d3.v6.min.js>download d3 min</a> |
+            <a href=https://d3js.org/d3.v6.js>download d3</a> |
+            <a href=https://code.jquery.com/jquery-3.5.1.min.js>download jquery min</a>
+          </td></tr>
+          <tr><td>
+            <dd>
+              Chez OBM, on cherche en permanence à produire des données signifiantes pour le client.
+              Nos automates ne se contentent pas de recueillir et stocker les données brutes.
+              Ils embarquent une API produisant de l'information compréhensible par les humains.
+            </dd>
+            <dd>
+              La visualisation ci dessous représente la carte de chaleur du bâtiment sur plusieurs semaines consécutives.
+            </dd>
+            <dd>
+              Vert = zone de confort. Bleu = trop froid. Orange = trop chaud.
+            </dd>
+            <div id="heating"></div>
+          </td></tr>
+          <tr><td>
+            <div id="chart"></div>
+          </td></tr>
+      </table>
     </div>
 </div>
-<div id="chart"></div>
-<div id="heating"></div>
+
 <script>
 
 var ts = 1611845100;
 //var ts = 1612039200;
-var url = "http://allierhab.ddns.net";
+//var url = "http://127.0.0.1";
+var url = "http://allierhab.ddns.net"
 var biosapi = url+"/bios?ts="+ts+"&interval=3600";
+//var statsurl = url+"/bios/network/cellule/1611845100"
+//var statsurl = url+"/bios/network/cellule/1577785800"
+var statsurl = url+"/bios/network/cells2/1577785800"
 
 // tailles en pixel
 var largeur = 600;
@@ -65,12 +92,110 @@ var min = 17;
 var max = 21;
 
 // création d'un svg responsif
+// pour visualiser la chaleur intérieure dans le bâtiment sous forme d'histogramme
+const heating = d3
+    .select("#heating")
+    .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", [0, 0, largeur, hauteur])
+
+function wrap(text, width) {
+/*
+cf mike Bockstock
+cf https://bl.ocks.org/mbostock/7555321
+and https://bl.ocks.org/guypursey/f47d8cd11a8ff24854305505dbbd8c07
+More to read on : https://github.com/d3/d3/issues/1642
+*/
+    text.each(function() {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            y = text.attr("y"),
+            dy = parseFloat(text.attr("dy")),
+            tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+        while (word = words.pop()) {
+            line.push(word);
+            tspan.text(line.join(" "));
+            if (tspan.node().getComputedTextLength() > width) {
+                line.pop();
+                tspan.text(line.join(" "));
+                line = [word];
+                tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+            }
+        }
+    });
+}
+
+$.ajax({
+    url: statsurl,
+    dataType: "json",
+    async: true,
+    success(data) {
+        var weeks = d3.map(data["stats"], function(d){return(d.humanTimeShort)});
+        //console.log(weeks);
+        // axe des x pour se repérer sur semaines
+        var x = d3.scaleBand()
+           .domain(weeks)
+           .range([margin.left, largeur - margin.right])
+           .padding([0.2]);
+        heating.append("g")
+           .attr("id", "text-legend")
+           .attr("transform", "translate(0," + (hauteur - margin.bottom) + ")")
+           .style("font-size", "6px")
+           .call(d3.axisBottom(x).tickSizeOuter(0))
+        .selectAll(".tick text")
+           .call(wrap, x.bandwidth());
+
+        // échelle des y - on n'affiche pas l'axe
+        var y = d3.scaleLinear()
+           .domain([0, 100])
+           .range([ hauteur - margin.bottom,  margin.top ]);
+
+        // palette de couleurs
+        var color = d3.scaleOrdinal()
+           .domain(["cold","confort","heat"])
+           .range(['#377eb8','#4daf4a','#e49f1a'])
+        // on stacke nos données
+        var stackGen = d3.stack()
+           .keys(["cold","confort","heat"]);
+        var stackedSeries = stackGen(data["stats"]);
+        // stackedSeries contient 3 ensembles de données, un pour chaque "clé" de chaleur
+        // on peut afficher la clé de l'ensemble 0
+        // console.log(stackedSeries[0].key);
+        // chaque ensemble de données est composé de tableaux de taille 2
+        // chaque tableau de taille 2 est associé à une clé data, qui contient toutes les données originelles
+        // construit l'histogramme
+        heating.append("g")
+           .selectAll("g")
+           // première boucle - on parcourt les données stackées
+           // les 3 plages de chaleur (cold, confort et heat)
+           .data(stackedSeries)
+           .enter().append("g")
+               .attr("fill", function(d) {
+                 //console.log(d);
+                 return color(d.key); })
+               .selectAll("rect")
+               // seconde boucle pour construire les rectangles
+               .data(function(d) { return d; })
+               .enter().append("rect")
+                   .attr("x", function(d) {
+                     return x(d.data.humanTimeShort); })
+                   .attr("y", function(d) { return y(d[1]); })
+                   .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+                   .attr("width",x.bandwidth());
+    }
+});
+
+// création d'un svg responsif
 const svg = d3
     .select("#chart")
     .append("svg")
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", [0, 0, largeur, hauteur])
-        
+
 // création de 3 échelles linéaires : une pour les abscisses, 2 pour les ordonnées (gauche + droite)
 var x = d3.scaleLinear()
     .domain([0, 167])
@@ -81,23 +206,23 @@ var y = d3.scaleLinear()
 var yr = d3.scaleLinear()
     .domain([-10, 100])
     .range([hauteur - margin.bottom, margin.top]);
-        
+
 // axe des abscisses
 var x_axis = d3.axisBottom().scale(x);
 var xAxisYtranslate = hauteur - margin.bottom;
 svg.append("g")
     .attr("transform", "translate(0," + xAxisYtranslate + ")")
     .call(x_axis);
-    
+
 //axes des ordonnées
 var y_axis = d3.axisLeft().scale(y);
 svg.append("g")
     .attr("transform", "translate(" + margin.left + ", 0)")
     .style("stroke", "black")
     .call(y_axis);
- 
+
 var yr_axis = d3.axisRight().scale(yr);
-var yrAxisXtranslate = largeur - margin.right; 
+var yrAxisXtranslate = largeur - margin.right;
 svg.append("g")
     .attr("transform", "translate(" + yrAxisXtranslate + ", 0)")
     .attr("class", "axisRed")
@@ -122,7 +247,7 @@ svg.append("linearGradient")
         .attr("offset", function(d) { return d.offset; })
         .attr("stop-color", function(d) { return d.color; });
 
-//création d'un masque  
+//création d'un masque
 svg.append("clipPath")
         .attr("id", "cliprange")
     .append("rect")
@@ -130,13 +255,14 @@ svg.append("clipPath")
         .attr("y", margin.top)
         .attr("width", largeur - margin.left - margin.right)
         .attr("height", hauteur - margin.top - margin.bottom);
-        
+
 const div = d3.select("body").append("div")
-    .attr("class", "tooltip") 
+    .attr("class", "tooltip")
     .style("opacity", 0);
 /*
-//on peut utiliser d3.json qui a l'air de fonctionner de manière asynchrone  
-//dans ce cas, pas besoin d'utiliser jquery      
+// ne fonctionne pas sous d3.v6 ??
+//on peut utiliser d3.json qui a l'air de fonctionner de manière asynchrone
+//dans ce cas, pas besoin d'utiliser jquery
 d3.json(biosapi, function(data) {
     $.each(data, function (circuitName, item) {
         if (item["Tint"]){
@@ -152,20 +278,20 @@ d3.json(biosapi, function(data) {
             var lineTint = d3.line()
                 .x(d => d.x)
                 .y(d => d.Tint);
-            
+
             //matérialisation des zones de présence du personnel
             var area = d3.area()
                 .x(d => d.x)
                 .y0(hauteur-margin.bottom)
                 .y1(d => d.agenda);
-            
+
             svg.append("path")
                 .datum(d)
                 .style("fill", "orange")
                 .style("opacity", 0.1)
                 .attr("clip-path", "url(#cliprange)")
                 .attr("d", area);
-            
+
             svg.append("path")
                 .datum(d)
                 .attr("id", circuitName)
@@ -173,11 +299,11 @@ d3.json(biosapi, function(data) {
                 .attr("stroke", "url(#line-gradient)")
                 .attr("d", lineTint)
                 .on("mouseover", function() {
-                    div.transition()        
-                        .duration(200)      
+                    div.transition()
+                        .duration(200)
                         .style("opacity", .9);
                     div.html("circuit: "+circuitName+"<br>Hello all")
-                        .style("left", (d3.event.pageX + 30) + "px")     
+                        .style("left", (d3.event.pageX + 30) + "px")
                         .style("top", (d3.event.pageY - 60) + "px");
                 })
                 .on("mouseout", function(d) {
@@ -189,17 +315,18 @@ d3.json(biosapi, function(data) {
     });
 });
 */
-$.ajax({ 
+
+$.ajax({
     url: biosapi,
     dataType: "json",
     async: true,
     success(data) {
         $.each(data, function (circuitName, item) {
-            console.log(circuitName);
+            //console.log(circuitName);
             if (!item["Tint"]){
-                console.log("pas de données, on passe à la suite");
+                //console.log("pas de données, on passe à la suite");
             } else {
-                console.log("Ok");
+                //console.log("Ok");
                 //on teste 2 méthodes : array ou array d'objets json
                 const Tint = [];
                 const agenda = [];
@@ -212,15 +339,15 @@ $.ajax({
                     element.agenda = y(20*item["agenda"][i]);
                     d.push(element);
                 }
-                // création d'une courbe à partir d'un array                
+                // création d'une courbe à partir d'un array
                 lineTint = d3.line()(Tint);
-                
+
                 //remplissage par une couleur de la zone sous la courbe
                 var area = d3.area()
                     .x(d => d.x)
                     .y0(hauteur-margin.bottom)
                     .y1(d => d.agenda);
-                    
+
                 //création d'un histogramme
                 svg.selectAll()
                     .data(d)
@@ -230,14 +357,14 @@ $.ajax({
                         .attr("y", d => d.agenda)
                         .attr("width", 0.1)
                         .attr("height", hauteur - margin.bottom);
-                
+
                 svg.append("path")
                     .datum(d)
                     .style("fill", "orange")
                     .style("opacity", 0.1)
                     .attr("clip-path", "url(#cliprange)")
                     .attr("d", area);
-                
+
                 svg.append("path")
                     .attr("clip-path", "url(#cliprange)")
                     .attr("stroke", "url(#line-gradient)")

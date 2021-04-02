@@ -41,43 +41,40 @@ div.tooltip {
 <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
 <script src="lib/bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
 <div class="container-fluid">
-    <div class="row-sm" id="filter">
-      <table class="table">
-          <tr><td colspan=3><img src=img/logo.svg class="img-fluid"></td></tr>
-          <tr><td colspan=3>
-            <dd>
-              Chez OBM, on cherche en permanence à produire des données signifiantes pour nos clients.
-              Nos automates ne se contentent pas de recueillir et stocker les données brutes.
-              Ils embarquent une API produisant de l'information compréhensible par les humains.
-            </dd>
-            <dd>
-              La visualisation ci dessous représente la répartition du temps d'occupation des locaux suivant 3 catégories de confort thermique. On peut parler de carte de chaleur.
-            </dd>
-              <dd>
-                Vert = zone de confort - température intérieure entre
-                <input type=text id=Tmin value=19 size=2>°C et <input type=text id=Tmax value=21 size=2>°C
-              </dd>
-	      <dd>Bleu = zone froide - température intérieure inférieure à <span id=cold>18</span>°C</dd>
-	      <dd>Orange = zone chaude - température intérieure supérieure à <span id=heat>21</span>°C</dd>
-          </td></tr>
-          <tr>
-            <td>
-              Circuit : <select id=circuit></select>
-            </td><td>
-              Pas de temps : <input type=text id=interval value=3600 size=4> secondes
-            </td><td>
-              Date : <input type=text id=ts value="2021-01-29 00:00:00" placeholder="AAAA-MM-DD HH:MM:SS">
-              <span id=humantime></span>
-            </td>
-          </tr>
-          <tr><td colspan=3>
-            <div id="heating"></div>
-          </td></tr>
-          <tr><td colspan=3>
-            <div id="chart"></div>
-          </td></tr>
-      </table>
-    </div>
+<div class="row-sm" id="filter">
+  <table class="table">
+    <tr><td colspan=2><img src=img/logo.svg class="img-fluid"></td></tr>
+    <tr><td colspan=2>
+      <dd>
+        Chez OBM, on cherche en permanence à produire des données signifiantes pour nos clients.
+        Nos automates ne se contentent pas de recueillir et stocker les données brutes.
+        Ils embarquent une API produisant de l'information compréhensible par les humains.
+      </dd>
+      <dd>
+        La visualisation ci dessous représente la répartition du temps d'occupation des locaux suivant 3 catégories de confort thermique.
+        On peut parler de carte de chaleur.
+      </dd>
+    </td></tr>
+    <tr>
+      <td>Circuit : <select id=circuit></select></td>
+      <td>Pas de temps : <input type=text id=interval value=3600 size=4> secondes</td>
+    </tr>
+    <tr><td colspan=2>
+      Date : <input type=text id=ts value="2021-01-29 00:00:00" placeholder="AAAA-MM-DD HH:MM:SS">
+      <span id=humantime></span>
+    </td></tr>
+    <tr><td colspan=2>
+      <dd>
+        Vert = zone de confort - température intérieure entre
+        <input type=text id=Tmin value=19 size=2>°C et <input type=text id=Tmax value=21 size=2>°C
+      </dd>
+      <dd>Bleu = zone froide - température intérieure inférieure à <span id=cold>18</span>°C</dd>
+      <dd>Orange = zone chaude - température intérieure supérieure à <span id=heat>21</span>°C</dd>
+    </td></tr>
+    <tr><td colspan=2><div id="heating"></div></td></tr>
+    <tr><td colspan=2><div id="chart"></div></td></tr>
+  </table>
+</div>
 </div>
 
 <script>

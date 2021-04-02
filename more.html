@@ -57,8 +57,8 @@ div.tooltip {
                 Vert = zone de confort - température intérieure entre
                 <input type=text id=Tmin value=19 size=2>°C et <input type=text id=Tmax value=21 size=2>°C
               </dd>
-		          <dd>Bleu = zone froide - température intérieure inférieure à <span id=cold>18</span>°C</dd>
-		          <dd>Orange = zone chaude - température intérieure supérieure à <span id=heat>21</span>°C</dd>
+	      <dd>Bleu = zone froide - température intérieure inférieure à <span id=cold>18</span>°C</dd>
+	      <dd>Orange = zone chaude - température intérieure supérieure à <span id=heat>21</span>°C</dd>
           </td></tr>
           <tr>
             <td>
@@ -117,8 +117,8 @@ More to read on : https://github.com/d3/d3/issues/1642
             line.push(word);
             tspan.text(line.join(" "));
             if (tspan.node().getComputedTextLength() > width) {
-                line.pop();1
-                tspan.text(line.join(" "));div
+                line.pop();
+                tspan.text(line.join(" "));
                 line = [word];
                 tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
             }

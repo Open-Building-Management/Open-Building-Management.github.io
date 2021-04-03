@@ -201,3 +201,18 @@ d3.json(biosapi, function(data) {
     });
 });
 ```
+## le style pour les tooltips
+
+```
+div.tooltip {
+  position: absolute;
+  text-align: center;
+	color: white;
+	padding: 2px;
+	font: 12px sans-serif;
+	background: grey;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+}
+```

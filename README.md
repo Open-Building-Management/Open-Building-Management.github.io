@@ -4,6 +4,146 @@ d3 = pour les graphiques svg
 
 jquery = pour l'ajax
 
+## premier essai
+
+```
+var ts = 1611845100;
+//var ts = 1612039200;
+
+var biosapi = url+"?ts="+ts+"&interval=3600";
+
+// création d'un svg responsif
+const svg = d3
+    .select("#chart")
+    .append("svg")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", [0, 0, largeur, hauteur])
+
+// création de 3 échelles linéaires : une pour les abscisses, 2 pour les ordonnées (gauche + droite)
+var x = d3.scaleLinear()
+    .domain([0, 167])
+    .range([margin.left, largeur - margin.right]);
+var y = d3.scaleLinear()
+    .domain([min, max])
+    .range([hauteur - margin.bottom, margin.top]);
+var yr = d3.scaleLinear()
+    .domain([-10, 100])
+    .range([hauteur - margin.bottom, margin.top]);
+
+// axe des abscisses
+var x_axis = d3.axisBottom().scale(x);
+var xAxisYtranslate = hauteur - margin.bottom;
+svg.append("g")
+    .attr("transform", "translate(0," + xAxisYtranslate + ")")
+    .call(x_axis);
+
+//axes des ordonnées
+var y_axis = d3.axisLeft().scale(y);
+svg.append("g")
+    .attr("transform", "translate(" + margin.left + ", 0)")
+    .style("stroke", "black")
+    .call(y_axis);
+
+var yr_axis = d3.axisRight().scale(yr);
+var yrAxisXtranslate = largeur - margin.right;
+svg.append("g")
+    .attr("transform", "translate(" + yrAxisXtranslate + ", 0)")
+    .attr("class", "axisRed")
+    .call(yr_axis);
+
+// Set the gradient - seulement sur y
+svg.append("linearGradient")
+    .attr("id", "line-gradient")
+    .attr("gradientUnits", "userSpaceOnUse")
+    .attr("x1", 0)
+    .attr("y1", y(min))
+    .attr("x2", 0)
+    .attr("y2", y(max))
+    .selectAll("stop")
+        .data([
+          {offset: "0%", color: "blue"},
+          {offset: "50%", color: "green"},
+          {offset: "75%", color: "yellow"},
+          {offset: "100%", color: "red"}
+        ])
+    .enter().append("stop")
+        .attr("offset", function(d) { return d.offset; })
+        .attr("stop-color", function(d) { return d.color; });
+
+//création d'un masque
+svg.append("clipPath")
+        .attr("id", "cliprange")
+    .append("rect")
+        .attr("x", margin.left)
+        .attr("y", margin.top)
+        .attr("width", largeur - margin.left - margin.right)
+        .attr("height", hauteur - margin.top - margin.bottom);
+
+const div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+    
+$.ajax({
+    url: biosapi,
+    dataType: "json",
+    async: true,
+    success(data) {
+        $.each(data, function (circuitName, item) {
+            //console.log(circuitName);
+            if (!item["Tint"]){
+                //console.log("pas de données, on passe à la suite");
+            } else {
+                //console.log("Ok");
+                //on teste 2 méthodes : array ou array d'objets json
+                const Tint = [];
+                const agenda = [];
+                const d = []
+                for (let i = 0; i < 168; ++i) {
+                    Tint.push([x(i), y(item["Tint"][i])]);
+                    element = {};
+                    element.x = x(i);
+                    element.Tint = y(item["Tint"][i]);
+                    element.agenda = y(20*item["agenda"][i]);
+                    d.push(element);
+                }
+                // création d'une courbe à partir d'un array
+                lineTint = d3.line()(Tint);
+
+                //remplissage par une couleur de la zone sous la courbe
+                var area = d3.area()
+                    .x(d => d.x)
+                    .y0(hauteur-margin.bottom)
+                    .y1(d => d.agenda);
+
+                //création d'un histogramme
+                svg.selectAll()
+                    .data(d)
+                    .enter()
+                        .append("rect")
+                        .attr("x", d => d.x)
+                        .attr("y", d => d.agenda)
+                        .attr("width", 0.1)
+                        .attr("height", hauteur - margin.bottom);
+
+                svg.append("path")
+                    .datum(d)
+                    .style("fill", "orange")
+                    .style("opacity", 0.1)
+                    .attr("clip-path", "url(#cliprange)")
+                    .attr("d", area);
+
+                svg.append("path")
+                    .attr("clip-path", "url(#cliprange)")
+                    .attr("stroke", "url(#line-gradient)")
+                    .attr("d", lineTint);
+            }
+        });
+    }
+});
+```
+
+## nota
+
 On peut requêter d3 sans jquery mais pas sûr que ce soit le bon choix. Faire du multifonction avec une seule library est un peu hasardeux. Mieux vaut partir sur des biblio expertes et spécialisées.
 ```
 /*

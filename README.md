@@ -146,7 +146,6 @@ $.ajax({
 
 On peut requêter d3 sans jquery mais pas sûr que ce soit le bon choix. Faire du multifonction avec une seule library est un peu hasardeux. Mieux vaut partir sur des biblio expertes et spécialisées.
 ```
-/*
 // ne fonctionne pas sous d3.v6 ??
 //on peut utiliser d3.json qui a l'air de fonctionner de manière asynchrone
 //dans ce cas, pas besoin d'utiliser jquery
@@ -201,5 +200,4 @@ d3.json(biosapi, function(data) {
         }
     });
 });
-*/
 ```

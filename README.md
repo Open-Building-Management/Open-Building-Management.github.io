@@ -207,12 +207,12 @@ d3.json(biosapi, function(data) {
 div.tooltip {
   position: absolute;
   text-align: center;
-	color: white;
-	padding: 2px;
-	font: 12px sans-serif;
-	background: grey;
-	border: 0px;
-	border-radius: 8px;
-	pointer-events: none;
+  color: white;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: grey;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
 }
 ```

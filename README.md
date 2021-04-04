@@ -216,3 +216,99 @@ div.tooltip {
   pointer-events: none;
 }
 ```
+
+## premier code pour les histogrammes de chaleur dynamique
+
+```
+function indoorHeatmap(url, root) {
+  /*
+  construit la carte de chaleur des températures intérieures pour le circuit
+  sous forme d'histogramme en barre
+  chaque barre de l'histogramme représente une semaine
+  les barres de l'histogramme sont cliquables et permettent d'afficher les données brutes correspondantes
+  */
+  // on commence par effacer la div
+  $("#heating").html("");
+  const u = new URL(url);
+  // on récupère le nom du circuit en parsant l'url
+  const circuit = u.pathname.split("/")[3];
+  // on pourrait aussi faire $("#circuit option:selected").val();
+  // on récupère la valeur de l'intervalle de discrétisation
+  const interval = $("#interval").val();
+
+  // on requête l'API
+  $.ajax({
+    url: url,
+    dataType: "json",
+    async: true,
+    success(data) {
+      if (data["stats"]){
+        // Si on a des stats, on initialise un svg responsif
+        let heating = d3
+          .select("#heating").append("svg")
+              .attr("preserveAspectRatio", "xMinYMin meet")
+              .attr("viewBox", [0, 0, largeur, hauteur])
+        let weeks = d3.map(data["stats"], function(d){return(d.humanTimeShort)});
+        //console.log(weeks);
+        // axe des x pour se repérer sur semaines
+        let x = d3.scaleBand()
+           .domain(weeks)
+           .range([margin.left, largeur - margin.right])
+           .padding([0.2]);
+        heating.append("g")
+           .attr("id", "text-legend")
+           .attr("transform", "translate(0," + (hauteur - margin.bottom) + ")")
+           .style("font-size", "6px")
+           .call(d3.axisBottom(x).tickSizeOuter(0))
+        .selectAll(".tick text")
+           .call(wrap, x.bandwidth());
+
+        // échelle des y - on n'affiche pas l'axe
+        let y = d3.scaleLinear()
+           .domain([0, 100])
+           .range([ hauteur - margin.bottom,  margin.top ]);
+        // palette de couleurs
+        let color = d3.scaleOrdinal()
+           .domain(["cold","confort","heat"])
+           .range(['#377eb8','#4daf4a','#e49f1a'])
+        // on stacke nos données
+        let stackGen = d3.stack()
+           .keys(["cold","confort","heat"]);
+        let stackedSeries = stackGen(data["stats"]);
+        // stackedSeries contient 3 ensembles de données, un pour chaque "clé" de chaleur
+        // on peut afficher la clé de l'ensemble 0
+        // console.log(stackedSeries[0].key);
+        // chaque ensemble de données est composé de tableaux de taille 2
+        // chaque tableau de taille 2 est associé à une clé data, qui contient toutes les données originelles
+        // construit l'histogramme
+        heating.append("g")
+           .selectAll("g")
+           // première boucle - on parcourt les données stackées
+           // les 3 plages de chaleur (cold, confort et heat) sont les clés
+           .data(stackedSeries)
+           .enter().append("g")
+               .attr("fill", function(d) {
+                 //console.log(d);
+                 return color(d.key); })
+               .selectAll("rect")
+               // seconde boucle pour construire les rectangles
+               .data(function(d) { return d; })
+               .enter().append("rect")
+                   .attr("x", function(d) {
+                     //console.log(d);
+                     return x(d.data.humanTimeShort); })
+                   .attr("y", function(d) { return y(d[1]); })
+                   .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+                   .attr("width",x.bandwidth())
+                   .on("click",function(d) {
+                     let ts = d.srcElement.__data__.data.ts;
+                     let rawurl = root + "/" + circuit + "/" + ts + "?interval=" + interval;
+                     console.log(rawurl);
+                     raw(rawurl);
+                   });
+
+      }
+    }
+  });
+}
+```

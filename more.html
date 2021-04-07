@@ -65,8 +65,8 @@
 
 <script>
 
-//var root = "http://127.0.0.1/bios";
-var root = "http://allierhab.ddns.net/bios";
+var root = "http://127.0.0.1/bios";
+//var root = "http://allierhab.ddns.net/bios";
 
 // tailles en pixel
 var largeur = 600;
@@ -151,12 +151,6 @@ function raw(url){
         let max = d3.max(data["Tint"]);
         let confortmin = $("#Tmin").val();
         let confortmax = $("#Tmax").val();
-        let u = new URL(url);
-        let ts = u.pathname.split("/")[3] * 1000;
-        // jour de la semaine avec une date longue
-        let options = {weekday: "long", year: "numeric", month: "long", day: "numeric"};
-        let human = new Date(ts).toLocaleDateString('fr-FR', options);
-        let titre = "Données brutes pour la semaine du "+human;
 
         // on efface le contenu de la div et on recrée le svg responsif
         d3.select("#chart").selectAll("*").remove();
@@ -169,14 +163,36 @@ function raw(url){
               d3.select("#chart").selectAll("*").remove();
             });
 
-        //titre
-        addTitle(rawchart, titre)
+        // ajout du titre du graphique avec mention de la semaine concernée
+        let u = new URL(url);
+        let ts = u.pathname.split("/")[3] * 1000;
+        // jour de la semaine avec une date longue
+        let options = {weekday: "long", year: "numeric", month: "long", day: "numeric"};
+        let human = new Date(ts).toLocaleDateString('fr-FR', options);
+        let titre = "Données brutes pour la semaine du "+human;
+        addTitle(rawchart, titre);
+
+        let occColor = "#90cef4";
+        addLegend(rawchart, [occColor], ["occupation"]);
+        //légende pour chauffage On/off
+        rawchart.append("line")
+          .attr("x1", 0)
+          .attr("x2", 10)
+          .attr("y1", 35)
+          .attr("y2", 35)
+          .style("stroke", "red")
+          .style("stroke-dasharray", ("1,1"))
+        rawchart.append('text')
+          .attr('transform', 'translate(12, 37)')
+          .style("color", "black")
+          .style("font-size", "7px")
+          .text("énergie");
 
         // échelles
         let nbh = data["Tint"].length;
         var x = d3.scaleLinear()
           .domain([0, nbh - 1])
-          .range([margin.left, largeur - margin.right]);
+          .range([2*margin.left, largeur - margin.right]);
         var y = d3.scaleLinear()
           .domain([ min, max ])
           .range([hauteur - margin.bottom, margin.top]);
@@ -187,11 +203,19 @@ function raw(url){
         rawchart.append("g")
           .attr("transform", "translate(0," + xAxisYtranslate + ")")
           .call(x_axis);
+        // ajout d'un label
+        let xx = 1.4*margin.right;
+        let yy = margin.top + 2*hauteur / 3;
+        rawchart.append("text")
+           .attr("transform", "translate("+xx+","+yy+") rotate(-90)")
+           .style("font", "7px arial")
+           .text("Température intérieure (°C)")
 
         //axes des ordonnées
         var y_axis = d3.axisLeft().scale(y);
         rawchart.append("g")
-          .attr("transform", "translate(" + margin.left + ", 0)")
+          .attr("transform", "translate(" + 2*margin.left + ", 0)")
+          .style("font", "7px arial")
           .call(y_axis);
 
         const d = [];
@@ -199,9 +223,20 @@ function raw(url){
           element = {};
           element.x = x(i);
           element.Tint = y(data["Tint"][i]);
-          element.agenda = y(20*data["agenda"][i]);
+          element.agenda = y((max-min)*data["agenda"][i]+min);
+          element.decision = y((max-min)*data["decision"][i]+min);
           d.push(element);
         }
+
+        // la décision énergétique
+        var lineDecision = d3.line()
+          .x(d => d.x)
+          .y(d => d.decision);
+        rawchart.append("path")
+          .datum(d)
+          .style("stroke", "red")
+          .style("stroke-dasharray", ("1,1")) // pointillés
+          .attr("d", lineDecision);
 
         //remplissage de la zone d'occupation par une couleur
         var area = d3.area()
@@ -209,20 +244,10 @@ function raw(url){
           .y0(hauteur-margin.bottom)
           .y1(d => d.agenda);
 
-        //création d'un masque
-        rawchart.append("clipPath")
-          .attr("id", "cliprange")
-          .append("rect")
-            .attr("x", margin.left)
-            .attr("y", margin.top)
-            .attr("width", largeur - margin.left - margin.right)
-            .attr("height", hauteur - margin.top - margin.bottom);
-
         rawchart.append("path")
           .datum(d)
-          .style("fill", "orange")
-          .style("opacity", 0.2)
-          .attr("clip-path", "url(#cliprange)")
+          .style("fill", occColor)
+          .style("opacity", 0.5)
           .attr("d", area);
 
         // courbe des températures intérieures
@@ -240,10 +265,10 @@ function raw(url){
           .attr("y2", y(confortmax))
           .selectAll("stop")
               .data([
-                {offset: "0%", color: "blue"},
-                {offset: "0%", color: "green"},
-                {offset: "100%", color: "green"},
-                {offset: "150%", color: "red"}
+                {offset: "0%", color: indoorColors["cold"]},
+                {offset: "0%", color: indoorColors["confort"]},
+                {offset: "100%", color: indoorColors["confort"]},
+                {offset: "150%", color: indoorColors["heat"]}
               ])
           .enter().append("stop")
               .attr("offset", function(d) { return d.offset; })
@@ -251,7 +276,6 @@ function raw(url){
 
         rawchart.append("path")
           .datum(d)
-          //.attr("clip-path", "uriteml(#cliprange)")
           .attr("stroke", "url(#line-gradient)")
           .attr("d", lineTint);
 
@@ -266,7 +290,7 @@ function addTitle(obj, titre) {
   */
   obj.append("text")
     .attr("x", (largeur / 2))
-    .attr("y", margin.top / 2)
+    .attr("y", 3*margin.top / 4)
     .attr("text-anchor", "middle")
     .style("color", "black")
     .style("font-size", "12px")
@@ -310,6 +334,9 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
   labels.push(min+" à "+max+"°C");
   labels.push("> "+max+"°C");
 
+  //on efface le contenu de la div
+  d3.select(divName).selectAll("*").remove();
+
   // on extrait les clés/dénominations de couleurs et les valeurs hexa correspondantes
   let colkeys = Object.keys(colors);
   let colvalues = Object.values(colors);
@@ -320,8 +347,7 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
     async: true,
     success(data) {
       if (data["stats"]){
-        // Si on a des stats, on efface le contenu de la div et on recrée le svg responsif
-        d3.select(divName).selectAll("*").remove();
+        // Si on a des stats, on crée le svg responsif
         let svg = d3.select(divName).append("svg")
           .attr("preserveAspectRatio", "xMinYMin meet")
           .attr("viewBox", [0, 0, largeur, hauteur]);
@@ -408,7 +434,7 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
 
 function indoorHeatmap(url) {
   let titre = "température intérieure / confort thermique";
-  heatmap(url, "#heating", indoorColors, titre = titre, ylabel = "% temps\nd'occupation", click = true);
+  heatmap(url, "#heating", indoorColors, titre = titre, ylabel = "% temps\nd'occupation\ndes locaux", click = true);
 }
 
 function outdoorHeatmap() {
@@ -433,11 +459,13 @@ function buildSelectAndInit(root){
       allcircuits.forEach(function(circuit, indice){
         //console.log(circuit);
         //console.log(data[circuit].Tint);
-        var tag ="";
-        if (indice === 0) {
-          tag = " selected";
+        if (circuit != "common") {
+          var tag ="";
+          if (indice === 0) {
+            tag = " selected";
+          }
+          options.push("<option value="+circuit+tag+">Zone "+circuit+"</option>");
         }
-        options.push("<option value="+circuit+tag+">Zone "+circuit+"</option>");
       });
       $("#circuit").html(options);
       let circuiturl = createCircuitUrl(root);
@@ -449,10 +477,17 @@ function buildSelectAndInit(root){
 
 buildSelectAndInit(root);
 
-
 $("#filter").on("change", function(){
+  d3.select("#chart").selectAll("*").remove();
   let circuiturl = createCircuitUrl(root);
   indoorHeatmap(circuiturl, root);
+});
+
+/*
+un changement de date induit un appel à outdoorHeatmap
+pour mettre à jour les histogrammes de température extérieure
+*/
+$("#ts").on("change", function(){
   outdoorHeatmap();
 });
 

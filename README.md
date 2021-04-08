@@ -312,3 +312,38 @@ function indoorHeatmap(url, root) {
   });
 }
 ```
+# équivalences pour construire des histogrammes
+
+on dispose de x et y qui permettent de se projeter sur le svg
+```
+for (let i = 0; i < nbw; ++i) {
+  let element = {};
+  element.x = x(data["stats"][i].humanTimeShort);
+  element.y = y(data["costs"][i]);
+  element.h = data["costs"][i] * (hauteur - margin.top - margin.bottom) / 100;
+  d.push(element);
+}
+```
+## solution 1 
+```
+d.forEach(function(item){
+  costs.append("rect")
+    .style("opacity", 0.2)
+    .attr("x", item.x)
+    .attr("y", item.y)
+    .attr("height", item.h)
+    .attr("width", x.bandwidth())
+});
+```
+## solution 2
+```
+costs.append("g").selectAll(".node")
+  .data(d)
+  .enter()
+    .append("rect")
+    .style("opacity", 0.2)
+    .attr("x", d => d.x)
+    .attr("y", d => d.y)
+    .attr("height", d => d.h)
+    .attr("width",x.bandwidth());
+```

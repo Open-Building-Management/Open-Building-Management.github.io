@@ -34,6 +34,7 @@
         Chez OBM, on cherche en permanence à produire des données signifiantes pour nos clients.
         Nos automates ne se contentent pas de recueillir les données brutes pour les envoyer vers un serveur de cloud de plus.
         Ils embarquent une API produisant de l'information compréhensible par les humains.
+        Voici un aperçu du type de restitution que nos outils peuvent produire.
     </td></tr>
     <tr><td>
   </table>
@@ -136,6 +137,70 @@ function createCircuitUrl(root){
   return(circuiturl);
 }
 
+function addTitle(obj, titre) {
+  /*
+  ajoute un titre à un graphique d3js
+  */
+  obj.append("text")
+    .attr("x", (largeur / 2))
+    .attr("y", 3*margin.top / 4)
+    .attr("text-anchor", "middle")
+    .style("color", "black")
+    .style("font-size", "12px")
+    .text(titre);
+}
+
+function addLegend(obj, colvalues, labels) {
+  /*
+  ajoute une légende à un graphique d3js
+  */
+  let legend = obj.append('g')
+    .attr('transform', 'translate(0, 20)');
+  legendCellSize = 10;
+  legend.selectAll()
+    .data(colvalues)
+    .enter().append('rect')
+      .attr('height', legendCellSize+'px')
+      .attr('width', legendCellSize+'px')
+      .attr('y', (d,i) => i * legendCellSize)
+      .style("fill", d => d);
+  legend.selectAll()
+    .data(labels)
+    .enter().append('text')
+      .attr("transform", (d,i) => "translate(" + (legendCellSize+2) + ", " + (i * legendCellSize) + ")")
+      .attr("dy", legendCellSize / 1.4) // Pour centrer le texte par rapport aux carrés
+      .style("font-size", "7px")
+      .style("color", "black")
+      .text(d => d);
+}
+
+function addVerticalLabel(obj, ylabel, x, y, size) {
+  /*
+  positionne sur le svg un label textuel vertical aux coordonnées x,y
+  exécute autant de retour(s) chariot(s) qu'il y a de \n dans le texte
+  */
+  let a = ylabel.split("\n");
+  a.forEach((item, i) => {
+    obj.append("text")
+      .style("font", size+"px arial")
+      .text(item)
+      .attr("transform", "translate("+(x+i*10)+","+y+") rotate(-90)")
+  });
+}
+
+function addHorizontalWeekLabels(obj, x, weeks) {
+  /*
+  légende horizontale pour repérer les semaines
+  */
+  obj.append("g")
+    .attr("id", "text-legend")
+    .attr("transform", "translate(0," + (hauteur - margin.bottom) + ")")
+    .style("font-size", "6px")
+    .call(d3.axisBottom(x).tickSizeOuter(0))
+  .selectAll(".tick text")
+    .call(wrap, x.bandwidth());
+}
+
 function raw(url){
   /*
   permet de visualiser les données brutes
@@ -172,9 +237,10 @@ function raw(url){
         let titre = "Données brutes pour la semaine du "+human;
         addTitle(rawchart, titre);
 
+        // ajout d'une légende
         let occColor = "#90cef4";
         addLegend(rawchart, [occColor], ["occupation"]);
-        //légende pour chauffage On/off
+        // ligne pointillée pour chauffage On/off
         rawchart.append("line")
           .attr("x1", 0)
           .attr("x2", 10)
@@ -203,13 +269,6 @@ function raw(url){
         rawchart.append("g")
           .attr("transform", "translate(0," + xAxisYtranslate + ")")
           .call(x_axis);
-        // ajout d'un label
-        let xx = 1.4*margin.right;
-        let yy = margin.top + 2*hauteur / 3;
-        rawchart.append("text")
-           .attr("transform", "translate("+xx+","+yy+") rotate(-90)")
-           .style("font", "7px arial")
-           .text("Température intérieure (°C)")
 
         //axes des ordonnées
         var y_axis = d3.axisLeft().scale(y);
@@ -217,6 +276,10 @@ function raw(url){
           .attr("transform", "translate(" + 2*margin.left + ", 0)")
           .style("font", "7px arial")
           .call(y_axis);
+        // ajout d'un label
+        let xx = 1.4*margin.right;
+        let yy = margin.top + 2*hauteur / 3;
+        addVerticalLabel(rawchart,"Température intérieure (°C)", xx, yy, 7);
 
         const d = [];
         for (let i = 0; i < nbh; ++i) {
@@ -243,7 +306,6 @@ function raw(url){
           .x(d => d.x)
           .y0(hauteur-margin.bottom)
           .y1(d => d.agenda);
-
         rawchart.append("path")
           .datum(d)
           .style("fill", occColor)
@@ -284,46 +346,18 @@ function raw(url){
   });
 }
 
-function addTitle(obj, titre) {
-  /*
-  ajoute un titre à un graphique d3js
-  */
-  obj.append("text")
-    .attr("x", (largeur / 2))
-    .attr("y", 3*margin.top / 4)
-    .attr("text-anchor", "middle")
-    .style("color", "black")
-    .style("font-size", "12px")
-    .text(titre);
-}
-
-function addLegend(obj, colvalues, labels) {
-  /*
-  ajoute une légende à un graphique d3js
-  */
-  let legend = obj.append('g')
-    .attr('transform', 'translate(0, 20)');
-  legendCellSize = 10;
-  legend.selectAll()
-    .data(colvalues)
-    .enter().append('rect')
-      .attr('height', legendCellSize+'px')
-      .attr('width', legendCellSize+'px')
-      .attr('y', (d,i) => i * legendCellSize)
-      .style("fill", d => d);
-  legend.selectAll()
-    .data(labels)
-    .enter().append('text')
-      .attr("transform", (d,i) => "translate(" + (legendCellSize+2) + ", " + (i * legendCellSize) + ")")
-      .attr("dy", legendCellSize / 1.4) // Pour centrer le texte par rapport aux carrés
-      .style("font-size", "7px")
-      .style("color", "black")
-      .text(d => d);
-}
-
 function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = false) {
   /*
-  construit une carte de chaleur sous la forme d'histogramme en barre
+  construit une carte de chaleur sous la forme d'histogrammes en barre
+  on utilise la fonction d3.stack pour empiler les pourcentages
+  let stackGen = d3.stack()
+    .keys(colkeys);
+  let stackedSeries = stackGen(data["stats"]);
+  stackedSeries contient ainsi 3 ensembles de données, un pour chaque "clé" de chaleur
+  pour obtenir la clé de l'ensemble 0 :
+  console.log(stackedSeries[0].key);
+  chaque ensemble de données "stackées" est composé de tableaux de taille 2
+  chaque tableau de taille 2 est associé à une clé data, qui contient toutes les données originelles
   */
   let u = new URL(url);
   let params = new URLSearchParams(u.search);
@@ -352,17 +386,9 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
           .attr("preserveAspectRatio", "xMinYMin meet")
           .attr("viewBox", [0, 0, largeur, hauteur]);
         addTitle(svg, titre);
-
         let xx = margin.right/2;
         let yy = margin.top + 2*hauteur / 3;
-        let a = ylabel.split("\n");
-        a.forEach((item, i) => {
-          svg.append("text")
-            .style("font-size", "10px")
-            .text(item)
-            .attr("transform", "translate("+(xx+i*10)+","+yy+") rotate(-90)")
-        });
-
+        addVerticalLabel(svg, ylabel, xx, yy, 10);
         addLegend(svg, colvalues, labels);
 
         // axe des x pour se repérer sur semaines
@@ -371,13 +397,7 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
           .domain(weeks)
           .range([margin.left, largeur - margin.right])
           .padding([0.2]);
-        svg.append("g")
-          .attr("id", "text-legend")
-          .attr("transform", "translate(0," + (hauteur - margin.bottom) + ")")
-          .style("font-size", "6px")
-          .call(d3.axisBottom(x).tickSizeOuter(0))
-        .selectAll(".tick text")
-          .call(wrap, x.bandwidth());
+        addHorizontalWeekLabels(svg, x, weeks);
 
         // échelle des y - on n'affiche pas l'axe
         let y = d3.scaleLinear()
@@ -391,11 +411,6 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
         let stackGen = d3.stack()
           .keys(colkeys);
         let stackedSeries = stackGen(data["stats"]);
-        // stackedSeries contient 3 ensembles de données, un pour chaque "clé" de chaleur
-        // on peut afficher la clé de l'ensemble 0
-        // console.log(stackedSeries[0].key);
-        // chaque ensemble de données est composé de tableaux de taille 2
-        // chaque tableau de taille 2 est associé à une clé data, qui contient toutes les données originelles
         // construit l'histogramme
         svg.append("g")
           .selectAll("g")
@@ -412,12 +427,56 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
               .attr("y", function(d) { return y(d[1]); })
               .attr("height", function(d) { return y(d[0]) - y(d[1]); })
               .attr("width",x.bandwidth());
-        if (click === true){
+
+        if (data["costs"]) {
+          var costs = d3.select(divName).append("svg")
+              .attr("preserveAspectRatio", "xMinYMin meet")
+              .attr("viewBox", [0, 0, largeur, hauteur]);
+          addTitle(costs, "coût énergétique");
+          addHorizontalWeekLabels(costs, x, weeks);
+          // ajout d'un label
+          let xx = margin.right / 2;
+          let yy = margin.top + 2*hauteur / 3;
+          addVerticalLabel(costs,"% temps\navec conso\nénergétique", xx, yy, 10);
+
+          let nbw = data["costs"].length;
+          energy = [];
+          for (let i = 0; i < nbw; ++i) {
+            let element = {};
+            element.ts = data["stats"][i].ts
+            element.x = x(data["stats"][i].humanTimeShort);
+            element.y = y(data["costs"][i]);
+            element.h = data["costs"][i] * (hauteur - margin.top - margin.bottom) / 100;
+            energy.push(element);
+          }
+
+          costs.append("g").selectAll(".node")
+            .data(energy)
+            .enter()
+              .append("rect")
+              .style("opacity", 0.2)
+              .attr("x", d => d.x)
+              .attr("y", d => d.y)
+              .attr("height", d => d.h)
+              .attr("width",x.bandwidth());
+        }
+
+        if (click === true) {
           // on récupère le nom du circuit en parsant l'url
           let circuit = u.pathname.split("/")[3];
           // on pourrait aussi faire $("#circuit option:selected").val();
           // on récupère la valeur de l'intervalle de discrétisation
+
           let interval = $("#interval").val();
+
+          if (data["costs"]) {
+            costs.data(energy).selectAll("g")
+              .on("click", function(d) {
+                let ts = d.srcElement.__data__.ts;
+                let rawurl = root + "/" + circuit + "/" + ts + "?interval=" + interval;
+                raw(rawurl);
+              });
+          }
           svg.selectAll("g").selectAll("g")
             .data(stackedSeries)
             .on("click",function(d) {
@@ -425,12 +484,12 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
               let rawurl = root + "/" + circuit + "/" + ts + "?interval=" + interval;
               //console.log(rawurl);
               raw(rawurl);
-            })
-          }
+            });
         }
       }
-    });
-  }
+    }
+  });
+}
 
 function indoorHeatmap(url) {
   let titre = "température intérieure / confort thermique";

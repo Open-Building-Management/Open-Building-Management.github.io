@@ -14,6 +14,18 @@
             position: relative;
         }
     </style>
+    <script>
+    //to make the menu responsive
+    function adaptMenu(){
+      if($(window).width()<800){
+        $("#meaning").css("display", "none");
+      } else {
+        $("#meaning").css("display", "block");
+      }
+    }
+    adaptMenu();
+    window.onresize = function(event) { adaptMenu();};
+    </script>
 </head>
 <body>
   <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">

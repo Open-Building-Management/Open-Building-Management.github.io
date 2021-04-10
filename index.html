@@ -50,6 +50,8 @@ import * as THREE from './lib/three.module.js';
 //import { GUI } from './jsm/libs/dat.gui.module.js';
 import { OrbitControls } from './lib/controls/OrbitControls.js';
 import { ColladaLoader } from './lib/loaders/ColladaLoader.js';
+let container, info;
+let camera, scene, renderer, hvac;
 
 init("V3V");
 //render();
@@ -72,8 +74,6 @@ $("#burner").click(function(){
 });
 
 function init(element) {
-    let container, info;
-    let camera, scene, renderer, hvac;
     document.getElementById( 'cta' ).innerHTML = "";
     container = document.getElementById( 'cta' );
     info = document.getElementById( 'info' );

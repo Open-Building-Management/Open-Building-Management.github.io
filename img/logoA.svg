@@ -64,21 +64,21 @@
        id="path2197"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7555542px;line-height:84.1999948%;font-family:'Terminator Two';-inkscape-font-specification:'Terminator Two';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22589155"
        d="m 6.052667,295.60116 q -1.5601295,0 -2.6826617,-1.18976 -1.1225322,-1.21028 -1.1225322,-2.89236 0,0 0,-0.8 0,-0.82054 0,-1.78465 0,-0.88207 0,-1.64105 0,-0.75899 0,-0.90258 0,-1.70259 1.1225322,-2.89235 1.1225322,-1.21027 2.6826617,-1.21027 l 6.659089,-0.0206 q 1.579155,0.0206 2.682662,1.23078 1.122532,1.18976 1.122532,2.89235 0,0.14359 0,0.90258 0,0.75898 0,1.64105 0,0.96411 0,1.78464 0,0.80001 0,0.80001 0,1.68208 -1.122532,2.89236 -1.103507,1.18975 -2.682662,1.18975 H 6.052667 Z m 6.659089,-3.07698 q 0.399546,0 0.665909,-0.28717 0.28539,-0.30771 0.28539,-0.71797 v -5.14879 q 0,-0.34873 -0.247338,-0.61539 -0.247337,-0.28719 -0.532727,-0.36924 -0.03805,0 -0.09513,0 -0.03805,-0.0206 -0.0761,-0.0206 l -6.659089,-0.0206 q -0.076104,0.0206 -0.1902598,0.082 -0.1141558,0.041 -0.2283115,0.12309 -0.2092857,0.12307 -0.3805194,0.34872 -0.1522078,0.22564 -0.1522078,0.49231 v 5.10777 q 0,0.41026 0.2663635,0.69745 0.2663637,0.28717 0.5898051,0.34872 0.019026,0 0.038052,0 0.038052,0 0.057078,0 l 6.6590889,-0.0206 z">
-       <animate dur="6s" values="#4e86b1; #000000; #000000;" keyTimes="0; 0.5; 1" attributeName="fill" repeatCount="indefinite"/>
+       <animate dur="6s" values="#ffffff; #000000; #000000;" keyTimes="0; 0.5; 1" attributeName="fill" repeatCount="indefinite"/>
     </path>
     <path
        inkscape:connector-curvature="0"
        id="path2199"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7555542px;line-height:84.1999948%;font-family:'Terminator Two';-inkscape-font-specification:'Terminator Two';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22589155"
        d="m 17.483113,295.60116 v -13.33353 q 0,0.0206 1.464999,0.0206 1.484026,0 3.253441,0 1.522078,0 2.853896,0 1.350843,0 1.731362,0 1.579156,0 2.682662,1.21028 1.122532,1.18976 1.122532,2.89234 0,0.69745 -0.209285,1.33335 -0.19026,0.6154 -0.57078,1.14875 0.437598,0.53333 0.703962,1.21026 0.285389,0.67694 0.285389,1.43592 0,1.68208 -1.122532,2.89236 -1.103507,1.18976 -2.682662,1.18976 -0.380519,0 -1.750389,0 -1.36987,0 -2.949025,0 -1.807467,0 -3.310519,0 -1.503051,0 -1.503051,0 z m 10.464283,-4.10263 q 0,-0.41026 -0.285389,-0.69744 -0.266364,-0.30771 -0.66591,-0.30771 l -6.678115,-0.0206 0.01902,2.05131 h 6.659089 q 0.399546,0.0206 0.66591,-0.28718 0.285389,-0.3077 0.285389,-0.71796 z m -1.065454,-6.15393 h -6.544934 v 2.05131 h 6.544934 q 0.380519,0.0205 0.665908,-0.28718 0.28539,-0.30771 0.28539,-0.71797 0,-0.43077 -0.28539,-0.71795 -0.285389,-0.3077 -0.665908,-0.3077 z">
-       <animate dur="6s" values="#000000; #4e86b1; #000000;" keyTimes="0; 0.5; 1" attributeName="fill" repeatCount="indefinite"/>
+       <animate dur="6s" values="#000000; #ffffff; #000000;" keyTimes="0; 0.5; 1" attributeName="fill" repeatCount="indefinite"/>
     </path>
     <path
        inkscape:connector-curvature="0"
        id="path2201"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:19.7555542px;line-height:84.1999948%;font-family:'Terminator Two';-inkscape-font-specification:'Terminator Two';text-align:start;letter-spacing:0px;word-spacing:0px;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22589155"
        d="M 40.314275,295.60116 H 37.46038 V 285.3446 h -2.853895 v 10.25656 H 31.75259 v -13.33353 h 10.464283 q 1.579155,0.0206 2.682661,1.23078 1.122532,1.18976 1.122532,2.89235 v 9.2104 h -2.853895 v -9.23091 q 0,-0.41026 -0.28539,-0.69744 -0.266363,-0.3077 -0.665908,-0.3077 l -1.902598,-0.0206 v 10.25656 z">
-       <animate dur="6s" values=" #000000; #000000; #4e86b1;" keyTimes="0; 0.5; 1" attributeName="fill" repeatCount="indefinite"/>
+       <animate dur="6s" values=" #000000; #000000; #ffffff;" keyTimes="0; 0.5; 1" attributeName="fill" repeatCount="indefinite"/>
     </path>
   </g>
 </svg>

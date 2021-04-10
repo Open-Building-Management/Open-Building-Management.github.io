@@ -18,9 +18,9 @@
     //to make the menu responsive
     function adaptMenu(){
       if($(window).width()<800){
-        $("#meaning").css("display", "none");
+        $("#brand").css("display", "none");
       } else {
-        $("#meaning").css("display", "block");
+        $("#brand").css("display", "block");
       }
     }
     adaptMenu();
@@ -40,7 +40,7 @@
             </li>
           </ul>
       </div>
-      <div id=meaning style="display: block;">Open Building Management</div>
+      <div id=brand style="display: block;">Open Building Management</div>
   </nav>
   <div class="container-fluid">
     {{ content }}

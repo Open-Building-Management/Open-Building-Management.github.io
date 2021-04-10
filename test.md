@@ -2,4 +2,4 @@
 layout: default
 permalink: test.html
 ---
-Hello world
+<div>Hello world</div>

@@ -23,7 +23,6 @@
         $("#brand").css("display", "block");
       }
     }
-    adaptMenu();
     window.onresize = function(event) { adaptMenu();};
     </script>
 </head>
@@ -42,6 +41,7 @@
       </div>
       <div id=brand style="display: block;">Open Building Management</div>
   </nav>
+  <script>adaptMenu();</script>
   <div class="container-fluid">
     {{ content }}
   </div>

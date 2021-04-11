@@ -10,12 +10,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="155.39828mm"
-   height="135.74855mm"
-   viewBox="0 0 155.39828 135.74856"
+   height="135.14854mm"
+   viewBox="0 0 155.39828 135.14855"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="immeuble.svg">
+   sodipodi:docname="immeubleb.svg">
   <defs
      id="defs2">
     <marker
@@ -80,10 +80,10 @@
     </marker>
     <inkscape:perspective
        sodipodi:type="inkscape:persp3d"
-       inkscape:vp_x="-110.59172 : 283.40892 : 1"
-       inkscape:vp_y="309.23174 : -1909.9515 : 0"
-       inkscape:vp_z="-430.89112 : -269.34251 : 1"
-       inkscape:persp3d-origin="-273.17769 : 65.481414 : 1"
+       inkscape:vp_x="-110.59172 : 283.40891 : 1"
+       inkscape:vp_y="309.23174 : -1909.9514 : 0"
+       inkscape:vp_z="-430.89112 : -269.3425 : 1"
+       inkscape:persp3d-origin="-273.17769 : 65.481411 : 1"
        id="perspective3784" />
     <inkscape:path-effect
        end_linecap_type="zerowidth"
@@ -99,6 +99,40 @@
        effect="powerstroke" />
     <style
        id="style11090">.cls-1{fill:#006fba;}.cls-2{fill:none;}</style>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath13296">
+      <path
+         d="M 62.5,231.5 H 412 v -93 H 62.5 Z"
+         id="path13294"
+         inkscape:connector-curvature="0" />
+    </clipPath>
+    <linearGradient
+       x1="0"
+       y1="101.81641"
+       x2="0"
+       y2="47.273438"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.5825,0,0,-0.5825,62.5,231.5)"
+       spreadMethod="pad"
+       id="linearGradient13488">
+      <stop
+         style="stop-opacity:1;stop-color:#4daf4a"
+         offset="0"
+         id="stop13480" />
+      <stop
+         style="stop-opacity:1;stop-color:#4daf4a"
+         offset="0"
+         id="stop13482" />
+      <stop
+         style="stop-opacity:1;stop-color:#4daf4a"
+         offset="1"
+         id="stop13484" />
+      <stop
+         style="stop-opacity:1;stop-color:#4daf4a"
+         offset="1"
+         id="stop13486" />
+    </linearGradient>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -107,11 +141,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="164.10197"
-     inkscape:cy="265.77122"
+     inkscape:zoom="2"
+     inkscape:cx="295.01385"
+     inkscape:cy="447.49898"
      inkscape:document-units="mm"
-     inkscape:current-layer="g11140"
+     inkscape:current-layer="layer1-1"
      showgrid="true"
      inkscape:measure-start="224.259,213.811"
      inkscape:measure-end="0,0"
@@ -120,15 +154,15 @@
      inkscape:window-x="67"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     fit-margin-top="0"
+     fit-margin-top="-2.7755576e-17"
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
        id="grid10"
-       originx="-35.101718"
-       originy="-147.0282" />
+       originx="-35.10171"
+       originy="-147.02833" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -146,7 +180,7 @@
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-35.101726,-14.223552)">
+     transform="translate(-35.101726,-14.823552)">
     <g
        transform="matrix(0.26458333,0,0,0.26458333,-481.46228,-168.3227)"
        id="chauffage">
@@ -686,13 +720,13 @@
            style="opacity:1;fill:#e94949;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:5.41155386;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke fill markers" />
       </g>
       <rect
-         style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:2.25236487;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:1.67660856;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect10481"
          width="587.33209"
-         height="23.786797"
+         height="13.180195"
          x="1952.3679"
          y="980.67645"
-         ry="1.4888751e-06" />
+         ry="8.2498138e-07" />
       <g
          id="g10894"
          transform="matrix(0.25,0,0,0.25,2402.9825,1102.5837)">
@@ -746,13 +780,13 @@
            style="fill:#000000;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       </g>
       <rect
-         style="opacity:1;fill:#808080;fill-opacity:1;stroke:none;stroke-width:2.25236487;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         style="opacity:1;fill:#a05a2c;fill-opacity:1;stroke:none;stroke-width:1.45759869;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          id="rect10481-4"
-         width="587.33209"
-         height="23.786797"
-         x="1952.3679"
-         y="844.67645"
-         ry="1.4888751e-06" />
+         width="580.78076"
+         height="10.072002"
+         x="1954.3096"
+         y="844.28601"
+         ry="6.3043183e-07" />
       <g
          id="g11121"
          transform="matrix(0.43046721,0,0,0.43046721,2024.6442,874.9605)">
@@ -762,14 +796,13 @@
            class="cls-2"
            inkscape:connector-curvature="0"
            style="fill:none" />
-         <ellipse
+        <ellipse
            ry="65.915871"
            rx="63.86256"
            cy="70.518463"
            cx="70.982796"
            id="path11132"
            style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:4.55685091;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
-
         <g
            id="g11140"
            transform="translate(-1.7028625,-0.45471418)">
@@ -803,9 +836,19 @@
              class="cls-1"
              d="M 82.7,70.72 A 11.61,11.61 0 0 1 70.59,82.65 C 63.65,82.6 58.78,77.5 58.88,70.38 58.98,63.26 63.76,58.71 71.14,58.83 78,58.94 82.74,63.81 82.7,70.72 Z"
              id="path11106" />
-          <animateTransform attributeName="transform" type="rotate" from="360 70.982796 70.518463" to="0 70.982796 70.518463" dur="1s" repeatCount="indefinite" />
+          <animateTransform
+             attributeName="transform"
+             type="rotate"
+             from="360 70.982796 70.518463"
+             to="0 70.982796 70.518463"
+             dur="1s"
+             repeatCount="indefinite" />
         </g>
       </g>
+      <g
+         transform="matrix(1.179502,0,0,1.1064631,2214.7405,645.24749)"
+         id="layer1-1"
+         inkscape:label="Calque 1" />
     </g>
   </g>
   <style

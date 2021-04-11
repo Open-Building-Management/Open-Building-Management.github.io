@@ -4,7 +4,7 @@ permalink: index.html
 ---
 <div class="row">
   <div class="col">
-    <h1 class="display-5">Soyez fier de votre consommation énergétique</h1>
+    <h1 class="display-5">Pilotez vos consommations énergétiques</h1>
     <p class="font-weight-bold">Chez OBM, nous prenons soin de vos systèmes énergétiques, chaudières, centrales de traitement d'air.</p>
 
     <p>Nous en supervisons le fonctionnement et faisons le lien avec votre exploitant pour la maintenance préventive.</p>

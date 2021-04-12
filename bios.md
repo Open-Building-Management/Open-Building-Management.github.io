@@ -5,7 +5,7 @@ permalink: bios.html
 <div class="row">
   <div class="col">
     <p class="font-weight-bold">
-      BIOS cherche en permanence à produire des données signifiantes pour nos clients.
+      BIOS cherche en permanence à produire des données signifiantes.
     </p>
     <p>
       Nos automates ne se contentent pas de recueillir les données brutes pour les envoyer vers un serveur de cloud de plus...

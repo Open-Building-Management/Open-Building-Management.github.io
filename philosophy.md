@@ -10,8 +10,8 @@ permalink: philosophy.html
       <p>Pourtant, s'il y a bien une population pour qui l'exploitation de la donnée peut s'avérer fondamentale, c'est bien celle là.
         Pourquoi toujours focaliser sur les personnels de bureau qui remplissent des tableaux à n'en plus finir,
         envoyant des mels en continu et qui vont finir par prendre en grippe le software en général.</p>
-      <p>OBM veut créer une plateforme tech qui changerait le quotidien des agents de terrain, en remplaçant intégralement le modèle
-      productiviste du passé par un modèle centré client.</p>
+      <p>OBM veut créer une plateforme tech qui changerait le quotidien des agents de terrain, en remplaçant intégralement
+        le modèle productiviste du passé par un modèle centré client.</p>
       <p>C'est pourquoi nous faisons le choix de nous intéresser de près au hardware et aux actionneurs, alors que la concurrence
          se limite à travailler sur l'interopérabilité entre les marques, confortablement confinée dans un univers virtuel.</p>
       <p>Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
@@ -104,7 +104,7 @@ function init(element) {
 
     container.appendChild( renderer.domElement );
 
-    window.addEventListener( 'resize', onWindowResize );
+    //window.addEventListener( 'resize', onWindowResize );
 
 }
 

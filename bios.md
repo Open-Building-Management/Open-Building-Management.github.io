@@ -8,10 +8,10 @@ permalink: bios.html
       BIOS cherche en permanence à produire des données signifiantes.
     </p>
     <p>
-      Nos automates ne se contentent pas de recueillir les données brutes pour les envoyer vers un serveur de cloud de plus...
+      Notre automate ne se contente pas de recueillir les données brutes pour les envoyer vers un serveur de cloud de plus...
     </p>
     <p>
-      Ils embarquent une API produisant de l'information compréhensible par les humains.
+      Il embarque une API produisant de l'information compréhensible par les humains.
     </p>
     <div id="filter">
       <p>Confort intérieur de <input type=text id=Tmin value=19 size=2> à <input type=text id=Tmax value=21 size=2>°C</p>

@@ -2,7 +2,6 @@
 layout: default
 permalink: philosophy.html
 ---
-</style>
 <div class="row">
     <div class="col" id="info">
       <p class="font-weight-bold">En route vers l'internet de l'énergie</p>

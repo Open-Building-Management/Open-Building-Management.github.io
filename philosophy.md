@@ -17,11 +17,11 @@ permalink: philosophy.html
       <p>Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
     </div>
     <div class="col-sm" id="cta">
-       <div id="ActionneursCarousel" class="carousel slide" data-ride="carousel">
+       <div id="CarAction" class="carousel slide" data-ride="carousel">
          <ol class="carousel-indicators">
-           <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-           <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-           <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+           <li data-target="#CarAction" data-slide-to="0" class="active"></li>
+           <li data-target="#CarAction" data-slide-to="1"></li>
+           <li data-target="#CarAction" data-slide-to="2"></li>
          </ol>
          <div class="carousel-inner">
            <div class="carousel-item active">
@@ -35,11 +35,11 @@ permalink: philosophy.html
            </div>
          </div>
        </div>
-       <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+       <a class="carousel-control-prev" href="#CarAction" role="button" data-slide="prev">
          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
          <span class="sr-only">Previous</span>
        </a>
-       <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+       <a class="carousel-control-next" href="#CarAction" role="button" data-slide="next">
          <span class="carousel-control-next-icon" aria-hidden="true"></span>
          <span class="sr-only">Next</span>
        </a>

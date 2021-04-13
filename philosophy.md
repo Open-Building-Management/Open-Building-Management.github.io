@@ -22,110 +22,23 @@ permalink: philosophy.html
         <button class="btn btn-outline-success" id="burner">Bruleur</button>
     </div>
     <div class="col-sm" id="cta">
+       <div id="ActionneursCarousel" class="carousel slide" data-ride="carousel">
+         <ol class="carousel-indicators">
+           <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+           <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+           <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+         </ol>
+         <div class="carousel-inner">
+           <div class="carousel-item active">
+             <img class="d-block w-100" src="/img/servo.png" alt="Servomoteur">
+           </div>
+           <div class="carousel-item">
+             <img class="d-block w-100" src="/img/pump.png" alt="Second slide">
+           </div>
+           <div class="carousel-item">
+             <img class="d-block w-100" src="img/v3v.png" alt="Third slide">
+           </div>
+         </div>
+       </div>
     </div>
 </div>
-<div id=choice></div>
-
-<script type="module">
-
-import * as THREE from './lib/three.module.js';
-import { OrbitControls } from './lib/controls/OrbitControls.js';
-import { ColladaLoader } from './lib/loaders/ColladaLoader.js';
-let container, info;
-let camera, scene, renderer, hvac;
-
-init("V3V");
-$("#choice").attr("value","V3V");
-animate();
-
-$("#v3v").click(function(){
-  $("#choice").attr("value","V3V");
-  init("V3V");
-});
-
-$("#pump").click(function(){
-  $("#choice").attr("value","pompes");
-  init("pompes");
-});
-
-$("#servo").click(function(){
-  $("#choice").attr("value","servo");
-  init("servo");
-});
-
-$("#burner").click(function(){
-  $("#choice").attr("value","bruleur");
-  init("bruleur");
-});
-
-function init(element) {
-    document.getElementById( 'cta' ).innerHTML = "";
-    container = document.getElementById( 'cta' );
-    info = document.getElementById( 'info' );
-
-    container.width = $(info).width();
-    container.height = $(info).height();
-
-    camera = new THREE.PerspectiveCamera( 15, container.width / container.height, 0.1, 50 );
-    camera.position.set( 10, 10, 20 );
-    camera.lookAt( 0, 0, 0 );
-
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0xffffff );
-    //grid helper
-    /*
-    const size = 10;
-    const divisions = 10;
-    const gridHelper = new THREE.GridHelper( size, divisions );
-    scene.add( gridHelper );
-    */
-
-    // loading the collada file produced with sketchup
-    const loadingManager = new THREE.LoadingManager( function () {
-        scene.add( hvac );
-    } );
-    const loader = new ColladaLoader( loadingManager );
-    loader.load( '/collada/'+element+'.dae', function ( collada ) {
-        hvac = collada.scene;
-    } );
-
-    const ambientLight = new THREE.AmbientLight( 0xffffff, 0.4 );
-    scene.add( ambientLight );
-    const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-    directionalLight.position.set( 1, 1, 0 ).normalize();
-    scene.add( directionalLight );
-
-    renderer = new THREE.WebGLRenderer( { antialias: true } );
-    renderer.setPixelRatio( window.devicePixelRatio );
-    renderer.setSize( container.width, container.height);
-    renderer.localClippingEnabled = true;
-
-    const controls = new OrbitControls( camera, renderer.domElement );
-    controls.addEventListener( 'change', render ); // use only if there is no animation loop
-    controls.enablePan = false;
-
-    container.appendChild( renderer.domElement );
-
-    //window.addEventListener( 'resize', onWindowResize );
-
-}
-
-function onWindowResize() {
-    info = $("#choice").attr("value");
-    init(info);
-
-}
-
-function animate() {
-
-    requestAnimationFrame( animate );
-    render();
-
-}
-
-function render() {
-    renderer.render( scene, camera );
-
-}
-
-</script>

@@ -2,6 +2,11 @@
 layout: default
 permalink: philosophy.html
 ---
+<style>
+    .carousel-indicators li {
+    filter: invert(100%);
+}
+</style>
 <div class="row">
     <div class="col" id="info">
       <p class="font-weight-bold">En route vers l'internet de l'énergie</p>
@@ -15,11 +20,6 @@ permalink: philosophy.html
       <p>C'est pourquoi nous faisons le choix de nous intéresser de près au hardware et aux actionneurs, alors que la concurrence
          se limite à travailler sur l'interopérabilité entre les marques, confortablement confinée dans un univers virtuel.</p>
       <p>Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
-
-        <button class="btn btn-outline-success" id="v3v">Vanne</button>
-        <button class="btn btn-outline-success" id="pump">Pompe</button>
-        <button class="btn btn-outline-success" id="servo">Servomoteur</button>
-        <button class="btn btn-outline-success" id="burner">Bruleur</button>
     </div>
     <div class="col-sm" id="cta">
        <div id="ActionneursCarousel" class="carousel slide" data-ride="carousel">
@@ -33,10 +33,10 @@ permalink: philosophy.html
              <img class="d-block w-100" src="/img/servo.png" alt="Servomoteur">
            </div>
            <div class="carousel-item">
-             <img class="d-block w-100" src="/img/pump.png" alt="Second slide">
+             <img class="d-block w-100" src="/img/pump.png" alt="Pompe">
            </div>
            <div class="carousel-item">
-             <img class="d-block w-100" src="img/v3v.png" alt="Third slide">
+             <img class="d-block w-100" src="img/v3v.png" alt="Vanne 3 voies">
            </div>
          </div>
        </div>

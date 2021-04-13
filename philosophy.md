@@ -73,10 +73,12 @@ function init(element) {
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0xffffff );
     //grid helper
+    /*
     const size = 10;
     const divisions = 10;
     const gridHelper = new THREE.GridHelper( size, divisions );
     scene.add( gridHelper );
+    */
 
     // loading the collada file produced with sketchup
     const loadingManager = new THREE.LoadingManager( function () {

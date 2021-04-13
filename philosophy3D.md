@@ -1,6 +1,6 @@
 ---
 layout: default
-permalink: philosophy.html
+permalink: philosophy3D.html
 ---
 <div class="row">
     <div class="col" id="info">

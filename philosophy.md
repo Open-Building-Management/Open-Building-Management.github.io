@@ -27,18 +27,27 @@ permalink: philosophy.html
          <div class="carousel-inner">
            <div class="carousel-item active">
              <img class="d-block w-100" src="/img/servo.png" alt="Servomoteur">
-               <div class="carousel-caption d-none d-md-block">
-                  <h5>Servomoteur</h5>
-               </div>
+             <div class="carousel-caption d-none d-md-block">
+               <h5>servomoteur</h5>
+             </div>
            </div>
            <div class="carousel-item">
              <img class="d-block w-100" src="/img/pump.png" alt="Pompe">
+             <div class="carousel-caption d-none d-md-block">
+               <h5>circulateur / pompe</h5>
+             </div>
            </div>
            <div class="carousel-item">
              <img class="d-block w-100" src="img/v3v.png" alt="Vanne 3 voies">
+             <div class="carousel-caption d-none d-md-block">
+               <h5>vanne 3 voies</h5>
+             </div>
            </div>
            <div class="carousel-item">
              <img class="d-block w-100" src="img/burner.png" alt="bruleur">
+             <div class="carousel-caption d-none d-md-block">
+               <h5>bruleur gaz</h5>
+             </div>
            </div>
          </div>
        </div>

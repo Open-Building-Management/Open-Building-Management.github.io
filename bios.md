@@ -15,7 +15,7 @@ permalink: bios.html
     </p>
     <div id="filter">
       <p>Confort intérieur de <input type=text id=Tmin value=19 size=2> à <input type=text id=Tmax value=21 size=2>°C</p>
-      <p><select id=circuit></select><input type=text size=15 id=ts value="2021-01-29T00:00:00" placeholder="AAAA-MM-DD HH:MM:SS"></p>
+      <p><select id=circuit></select><input type=text size=15 id=ts value="2021-01-29T00:00:00" placeholder="AAAA-MM-DDTHH:MM:SS"></p>
       <p>Précision : <input type=text id=interval value=3600 size=4> secondes</p>
     </div>
     <div id="chart"></div>

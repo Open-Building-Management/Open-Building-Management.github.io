@@ -15,6 +15,7 @@ permalink: philosophy.html
       <p>C'est pourquoi nous faisons le choix de nous intéresser de près au hardware et aux actionneurs, alors que la concurrence
          se limite à travailler sur l'interopérabilité entre les marques, confortablement confinée dans un univers virtuel.</p>
       <p>Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
+      <a class="btn btn-success" href="/philosophy3D.html">Passer à la version 3D</a>
     </div>
     <div class="col-sm" id="cta">
        <div id="CarAction" class="carousel slide" data-ride="carousel">

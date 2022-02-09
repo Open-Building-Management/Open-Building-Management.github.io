@@ -11,12 +11,14 @@ permalink: bios.html
       Notre automate ne se contente pas de recueillir les données brutes pour les envoyer vers un serveur de cloud de plus...
     </p>
     <p>
-      Il embarque une API produisant de l'information compréhensible par les humains.
+      Il embarque une API statistique.
     </p>
     <div id="filter">
       <p>Choisissez le site : <select id=machine></select></p>
       <p>Confort intérieur de <input type=text id=Tmin value=19 size=2> à <input type=text id=Tmax value=21 size=2>°C</p>
       <p><select id=circuit></select><input type=text size=15 id=ts value="2021-01-29T00:00:00" placeholder="AAAA-MM-DDTHH:MM:SS"></p>
+      <p>numéro de flux énergie : <input type=text size=4 id=energy></p>
+      <p>numéro de flux Tint : <input type=text size=4 id=tint></p>
       <p>Précision : <input type=text id=interval value=3600 size=4> secondes</p>
     </div>
     <div id="chart"></div>
@@ -36,9 +38,9 @@ path {
 
 <script src="/lib/bios.js"></script>
 <script>
-// var root = 'http://127.0.0.1/bios';
-var root = 'http://allierhab.ddns.net/bios';
-allbios = {allierhab:"labo",ceremace:"bloch"};
+var root = 'http://127.0.0.1/bios';
+//var root = 'http://allierhab.ddns.net/bios';
+allbios = {"127.0.0.1":"local","allierhab.ddns.net":"labo","ceremace.ddns.net":"bloch"};
 let options=[];
 for (let key in allbios) {
   options.push("<option value="+key+">"+allbios[key]+"</option>");
@@ -60,7 +62,7 @@ buildCircuitSelectAndInit(root);
 $("#machine").on("change", function(){
   d3.select("#chart").selectAll("*").remove();
   let machine = $("#machine").val();
-  root = 'http://'+machine+'.ddns.net/bios';
+  root = 'http://'+machine+'/bios';
   buildCircuitSelectAndInit(root);
 });
 
@@ -68,7 +70,7 @@ $("#machine").on("change", function(){
 // dans tous les cas, on met à jour les graphes indoor
 $("#filter").on("change", function(){
   let machine = $("#machine").val();
-  root = 'http://'+machine+'.ddns.net/bios';
+  root = 'http://'+machine+'/bios';
   d3.select("#chart").selectAll("*").remove();
   let circuiturl = createCircuitUrl(root);
   indoorHeatmap(circuiturl, root);
@@ -77,7 +79,7 @@ $("#filter").on("change", function(){
 //un changement de date implique aussi qu'on mette à jour les graphes outdoor
 $("#ts").on("change", function(){
   let machine = $("#machine").val();
-  root = 'http://'+machine+'.ddns.net/bios';
+  root = 'http://'+machine+'/bios';
   outdoorHeatmap(root);
 });
 </script>

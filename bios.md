@@ -5,13 +5,7 @@ permalink: bios.html
 <div class="row">
   <div class="col">
     <p class="font-weight-bold">
-      BIOS cherche en permanence à produire des données signifiantes.
-    </p>
-    <p>
-      Notre automate ne se contente pas de recueillir les données brutes pour les envoyer vers un serveur de cloud de plus...
-    </p>
-    <p>
-      Il embarque une API statistique.
+      BIOS cherche en permanence à produire des données signifiantes et embarque une API statistique.
     </p>
     <div id="filter">
       <p>Choisissez le site : <select id=machine></select></p>
@@ -38,9 +32,9 @@ path {
 
 <script src="/lib/bios.js"></script>
 <script>
-var root = 'http://127.0.0.1/bios';
-//var root = 'http://allierhab.ddns.net/bios';
-allbios = {"127.0.0.1":"local","allierhab.ddns.net":"labo","ceremace.ddns.net":"bloch"};
+//var root = 'http://127.0.0.1/bios';
+var root = 'http://allierhab.ddns.net/bios';
+allbios = {"allierhab.ddns.net":"labo","ceremace.ddns.net":"bloch", "127.0.0.1":"local"};
 let options=[];
 for (let key in allbios) {
   options.push("<option value="+key+">"+allbios[key]+"</option>");

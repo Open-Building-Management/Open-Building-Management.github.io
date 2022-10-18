@@ -33,8 +33,8 @@ path {
 <script src="/lib/bios.js"></script>
 <script>
 //var root = 'http://127.0.0.1/bios';
-var root = 'http://allierhab.ddns.net/bios';
-allbios = {"allierhab.ddns.net":"labo","ceremace.ddns.net":"bloch", "127.0.0.1":"local"};
+var root = 'http://allierhab.ddns.net:8080/bios';
+allbios = {"allierhab.ddns.net:8080":"labo","ceremace.ddns.net":"bloch", "127.0.0.1":"local"};
 let options=[];
 for (let key in allbios) {
   options.push("<option value="+key+">"+allbios[key]+"</option>");

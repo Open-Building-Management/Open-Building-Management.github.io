@@ -5,16 +5,10 @@ permalink: philosophy3D.html
 <div class="row">
     <div class="col" id="info">
       <p class="font-weight-bold">En route vers l'internet de l'énergie</p>
-      <p>Dans le monde du numérique, peu de startups se penchent sur l’expérience ressentie par les agents de terrain,
-        qui font des actions mécaniques, dans le cambouis toute la journée, au fond des salles des machines et des chaufferies.</p>
-      <p>Pourtant, s'il y a bien une population pour qui l'exploitation de la donnée peut s'avérer fondamentale, c'est bien celle là.
-        Pourquoi toujours focaliser sur les personnels de bureau qui remplissent des tableaux à n'en plus finir,
-        envoyant des mels en continu et qui vont finir par prendre en grippe le software en général.</p>
-      <p>OBM veut créer une plateforme tech qui changerait le quotidien des agents de terrain, en remplaçant intégralement
-        le modèle productiviste du passé par un modèle centré client.</p>
-      <p>C'est pourquoi nous faisons le choix de nous intéresser de près au hardware et aux actionneurs, alors que la concurrence
-         se limite à travailler sur l'interopérabilité entre les marques, confortablement confinée dans un univers virtuel.</p>
-      <p>Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
+      <p>Dans le monde du numérique, peu de startups se penchent sur l’expérience ressentie par les agents de terrain, qui font des actions mécaniques, dans le cambouis toute la journée, au fond des salles des machines et des chaufferies.</p>
+      <p>Pourtant, s'il y a bien une population pour qui l'exploitation de la donnée peut s'avérer fondamentale, c'est bien celle là.</p>
+      <p>OBM veut créer une plateforme tech qui changerait le quotidien des agents de terrain, en remplaçant intégralement le modèle productiviste du passé par un modèle centré client.</p>
+      <p>C'est pourquoi nous faisons le choix de nous intéresser de près au hardware et aux actionneurs. Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
 
         <button class="btn btn-outline-success" id="v3v">Vanne</button>
         <button class="btn btn-outline-success" id="pump">Pompe</button>

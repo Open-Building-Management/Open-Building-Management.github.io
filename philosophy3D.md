@@ -33,7 +33,7 @@ document.getElementById("choice").setAttribute("value", "V3V");
 animate();
 
 document.getElementById("v3v").addEventListener("click", () => {
-  $("#choice").attr("value","V3V");
+  document.getElementById("choice").setAttribute("value", "V3V");
   init("V3V");
 });
 

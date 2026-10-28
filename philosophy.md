@@ -12,39 +12,23 @@ permalink: philosophy.html
       <a class="btn btn-success" href="/philosophy3D.html">Passer à la version 3D</a>
     </div>
     <div class="col-sm" id="cta">
-       <div id="CarAction" class="carousel slide" data-ride="carousel">
-         <ol class="carousel-indicators">
-           <li data-target="#CarAction" data-slide-to="0" class="active"></li>
-           <li data-target="#CarAction" data-slide-to="1"></li>
-           <li data-target="#CarAction" data-slide-to="2"></li>
-           <li data-target="#CarAction" data-slide-to="3"></li>
-         </ol>
-         <div class="carousel-inner">
-           <div class="carousel-item active">
-             <img class="d-block w-100" src="/img/servo.png" alt="Servomoteur">
-             <div class="carousel-caption d-none d-md-block">
-               <h5>servomoteur</h5>
-             </div>
-           </div>
-           <div class="carousel-item">
-             <img class="d-block w-100" src="/img/pump.png" alt="Pompe">
-             <div class="carousel-caption d-none d-md-block">
-               <h5>circulateur / pompe</h5>
-             </div>
-           </div>
-           <div class="carousel-item">
-             <img class="d-block w-100" src="img/v3v.png" alt="Vanne 3 voies">
-             <div class="carousel-caption d-none d-md-block">
-               <h5>vanne 3 voies</h5>
-             </div>
-           </div>
-           <div class="carousel-item">
-             <img class="d-block w-100" src="img/burner.png" alt="bruleur">
-             <div class="carousel-caption d-none d-md-block">
-               <h5>bruleur gaz</h5>
-             </div>
-           </div>
-         </div>
-       </div>
+      <obm-carousel aria-label="Exemples d'actionneurs">
+        <div class="carousel-slide active">
+          <img src="/img/servo.png" alt="Servomoteur">
+          <div class="caption"><h5>servomoteur</h5></div>
+        </div>
+        <div class="carousel-slide">
+          <img src="/img/pump.png" alt="Pompe">
+          <div class="caption"><h5>circulateur / pompe</h5></div>
+        </div>
+        <div class="carousel-slide">
+          <img src="/img/v3v.png" alt="Vanne 3 voies">
+          <div class="caption"><h5>vanne 3 voies</h5></div>
+        </div>
+        <div class="carousel-slide">
+          <img src="/img/burner.png" alt="Brûleur">
+          <div class="caption"><h5>brûleur gaz</h5></div>
+        </div>
+      </obm-carousel>
     </div>
 </div>

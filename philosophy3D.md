@@ -29,26 +29,26 @@ let container, info;
 let camera, scene, renderer, hvac;
 
 init("V3V");
-$("#choice").attr("value","V3V");
+document.getElementById("choice").setAttribute("value", "V3V");
 animate();
 
-$("#v3v").click(function(){
-  $("#choice").attr("value","V3V");
+document.getElementById("v3v").addEventListener("click", () => {
+  document.getElementById("choice").setAttribute("value", "V3V");
   init("V3V");
 });
 
-$("#pump").click(function(){
-  $("#choice").attr("value","pompes");
+document.getElementById("pump").addEventListener("click", () => {
+  document.getElementById("choice").setAttribute("value", "pompes");
   init("pompes");
 });
 
-$("#servo").click(function(){
-  $("#choice").attr("value","servo");
+document.getElementById("servo").addEventListener("click", () => {
+  document.getElementById("choice").setAttribute("value", "servo");
   init("servo");
 });
 
-$("#burner").click(function(){
-  $("#choice").attr("value","bruleur");
+document.getElementById("burner").addEventListener("click", () => {
+  document.getElementById("choice").setAttribute("value", "bruleur");
   init("bruleur");
 });
 
@@ -57,8 +57,8 @@ function init(element) {
     container = document.getElementById( 'cta' );
     info = document.getElementById( 'info' );
 
-    container.width = $(info).width();
-    container.height = $(info).height();
+    container.width = info.clientWidth;
+    container.height = Math.max(info.clientHeight, 320);
 
     camera = new THREE.PerspectiveCamera( 15, container.width / container.height, 0.1, 50 );
     camera.position.set( 10, 10, 20 );
@@ -105,7 +105,7 @@ function init(element) {
 }
 
 function onWindowResize() {
-    info = $("#choice").attr("value");
+    info = document.getElementById("choice").getAttribute("value");
     init(info);
 
 }

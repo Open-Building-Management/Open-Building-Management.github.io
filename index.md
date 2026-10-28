@@ -13,5 +13,5 @@ permalink: index.html
     </p>
     <a class="btn btn-success" href="/bios.html">découvrez BIOS</a>
   </div>
-<div class="col-sm"><center><img src="/img/immeubleb.svg" class="img-fluid"></center></div>
+<div class="col-sm"><div style="text-align:center"><img src="/img/immeubleb.svg" class="img-fluid" alt="Immeuble"></div></div>
 </div>

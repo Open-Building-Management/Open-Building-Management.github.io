@@ -3,7 +3,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <style>
-  body { font: 10px Arial;}
+  body { font: 10px Arial; margin: 1rem; }
+  .container-fluid { width: 100%; }
+  .table { border-collapse: collapse; width: 100%; }
+  .table td { padding: .35rem; }
+  .img-fluid { max-width: 100%; height: auto; }
+  .row-sm { display: flex; flex-wrap: wrap; gap: 1rem; }
+  .col-sm { flex: 1 1 0; min-width: 0; }
   path {
     stroke-width: 1;
     fill: none;
@@ -21,9 +27,7 @@
   </style>
   <!--<script src="https://d3js.org/d3.v4.min.js"></script>-->
   <script src="lib/d3.v6.min.js"></script>
-  <script src="lib/jquery-3.5.1.min.js"></script>
-  <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
-  <script src="lib/bootstrap-4.5.3-dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
 
@@ -83,7 +87,7 @@ function humanTime2ts(){
   /*
   convertit le temps indiqué dans la div ts en unix timestamp
   */
-  let start = $("#ts").val();
+  let start = document.getElementById("ts").value;
   let human = new Date(start);
   // donne le même résultat que Date.parse(start)/1000
   let ts = human.getTime()/1000;
@@ -126,10 +130,10 @@ function createCircuitUrl(root){
   /*
   construit l'url pour requêter les statistiques sur un circuit
   */
-  let Tmin = $("#Tmin").val();
-  let Tmax = $("#Tmax").val();
-  let interval = $("#interval").val();
-  let circuit = $("#circuit").val();
+  let Tmin = document.getElementById("Tmin").value;
+  let Tmax = document.getElementById("Tmax").value;
+  let interval = document.getElementById("interval").value;
+  let circuit = document.getElementById("circuit").value;
   let ts = humanTime2ts();
   //console.log(circuit);
   //console.log(ts);
@@ -205,17 +209,18 @@ function raw(url){
   /*
   permet de visualiser les données brutes
   */
-  $.ajax({
-    url: url,
-    dataType: "json",
-    async: true,
-    success(data) {
+  fetch(url)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
       if (data["Tint"]) {
         // min et max
         let min = d3.min(data["Tint"]);
         let max = d3.max(data["Tint"]);
-        let confortmin = $("#Tmin").val();
-        let confortmax = $("#Tmax").val();
+        let confortmin = document.getElementById("Tmin").value;
+        let confortmax = document.getElementById("Tmax").value;
 
         // on efface le contenu de la div et on recrée le svg responsif
         d3.select("#chart").selectAll("*").remove();
@@ -342,8 +347,8 @@ function raw(url){
           .attr("d", lineTint);
 
       }
-    }
-  });
+    })
+    .catch(error => console.error("Erreur lors de la requête BIOS :", error));
 }
 
 function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = false) {
@@ -375,11 +380,12 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
   let colkeys = Object.keys(colors);
   let colvalues = Object.values(colors);
   // on requête l'API
-  $.ajax({
-    url: url,
-    dataType: "json",
-    async: true,
-    success(data) {
+  fetch(url)
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
       if (data["stats"]){
         // Si on a des stats, on crée le svg responsif
         let svg = d3.select(divName).append("svg")
@@ -464,10 +470,10 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
         if (click === true) {
           // on récupère le nom du circuit en parsant l'url
           let circuit = u.pathname.split("/")[3];
-          // on pourrait aussi faire $("#circuit option:selected").val();
+          // on pourrait aussi faire document.getElementById("circuit option:selected").value;
           // on récupère la valeur de l'intervalle de discrétisation
 
-          let interval = $("#interval").val();
+          let interval = document.getElementById("interval").value;
 
           if (data["costs"]) {
             costs.data(energy).selectAll("g")
@@ -487,8 +493,8 @@ function heatmap(url, divName, colors, titre = "", ylabel = "% temps", click = f
             });
         }
       }
-    }
-  });
+    })
+    .catch(error => console.error("Erreur lors de la requête BIOS :", error));
 }
 
 function indoorHeatmap(url) {
@@ -498,7 +504,7 @@ function indoorHeatmap(url) {
 
 function outdoorHeatmap() {
   let ts = humanTime2ts();
-  let interval = $("#interval").val();
+  let interval = document.getElementById("interval").value;
   let titre = "température extérieure";
   let exturl = root+"/text/"+ts+"?interval="+interval+"&Tmin=0&Tmax=10";
   heatmap(exturl, "#out", outdoorColors, titre = titre);
@@ -507,11 +513,12 @@ function outdoorHeatmap() {
 function buildSelectAndInit(root){
   //affiche le menu déroulant permettant le choix des circuits
   //initialise la carte de chaleur avec les paramètres initiaux
-  $.ajax({
-    url: root+"/network",
-    dataType: "json",
-    async: true,
-    success(data) {
+  fetch(root+"/network")
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
       //création du tableau pour héberger le contenu du select
       let options=[];
       let allcircuits=Object.getOwnPropertyNames(data);
@@ -526,17 +533,17 @@ function buildSelectAndInit(root){
           options.push("<option value="+circuit+tag+">Zone "+circuit+"</option>");
         }
       });
-      $("#circuit").html(options);
+      document.getElementById("circuit").innerHTML = options.join("");
       let circuiturl = createCircuitUrl(root);
       indoorHeatmap(circuiturl);
       outdoorHeatmap();
-    }
-  });
+    })
+    .catch(error => console.error("Erreur lors de la requête BIOS :", error));
 }
 
 buildSelectAndInit(root);
 
-$("#filter").on("change", function(){
+document.getElementById("filter").addEventListener("change", function(){
   d3.select("#chart").selectAll("*").remove();
   let circuiturl = createCircuitUrl(root);
   indoorHeatmap(circuiturl, root);
@@ -546,7 +553,7 @@ $("#filter").on("change", function(){
 un changement de date induit un appel à outdoorHeatmap
 pour mettre à jour les histogrammes de température extérieure
 */
-$("#ts").on("change", function(){
+document.getElementById("ts").addEventListener("change", function(){
   outdoorHeatmap();
 });
 

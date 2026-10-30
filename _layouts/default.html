@@ -1,46 +1,5 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <title>OBM - Open Building Management</title>
-    <meta charset="utf-8">
-    <link rel="shortcut icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="/lib/d3.v6.min.js"></script>
-    <style>
-        html, body {
-            padding-top: 40px;
-            background-color: #fff;
-            position: relative;
-            margin: 10px;
-        }
-        .container-fluid { width: 100%; }
-        .row { display: flex; flex-wrap: wrap; gap: 1rem; }
-        .row > .col, .row > .col-sm { flex: 1 1 0; min-width: 0; }
-        .font-weight-bold { font-weight: 700; }
-        .display-5 { font-size: 2.5rem; font-weight: 300; line-height: 1.2; }
-        .carousel-slide { position: relative; }
-        .carousel-slide img { display: block; width: 100%; height: auto; }
-        .carousel-slide .caption { position: absolute; left: 10%; right: 10%; bottom: 12px; text-align: center; background: rgba(255,255,255,.75); color: #111; }
-        .img-fluid { max-width: 100%; height: auto; }
-        .btn {
-            display: inline-block;
-            padding: .375rem .75rem;
-            border: 1px solid transparent;
-            border-radius: .25rem;
-            text-decoration: none;
-            cursor: pointer;
-            font: inherit;
-        }
-        .btn-success { color: #fff; background: #218838; border-color: #1e7e34; }
-        .btn-outline-success { color: #218838; background: transparent; border-color: #218838; }
-        .grid .tick { stroke: lightgrey; opacity: .2; }
-        .grid path { stroke-width: 0; }
-        @media (max-width: 700px) {
-            .row > .col, .row > .col-sm { flex-basis: 100%; }
-        }
-    </style>
-    <script type="module" src="/lib/modules/components/obm-components.js"></script>
-</head>
+<html>
+{% include "head.html" %}
 <body>
   <obm-site-nav></obm-site-nav>
   <main class="container-fluid">

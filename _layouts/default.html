@@ -8,14 +8,12 @@
     <div class="row">
       <div class="col">
         <h1 class="display-5" data-i18n="home.master">
-            Maitrisez le fonctionnement de votre bâtiment à travers son jumeau numérique
+          Maitrisez le fonctionnement de votre bâtiment à travers son jumeau numérique
         </h1>
+        <idf-legend viewer="building"></idf-legend>
       </div>
       <div class="col-sm">
-        <div class="idf-viewer-container" style="position: relative;">
-          <idf-viewer id="building" src="/models/example.idf" style="height: 500px"></idf-viewer>
-          <idf-legend viewer="building"></idf-legend>
-        </div>
+        <idf-viewer id="building" src="/models/example.idf" style="height: 500px"></idf-viewer>
       </div>
   </main>
   <script type="module" src="/lib/modules/components/idf-viewer.js"></script>

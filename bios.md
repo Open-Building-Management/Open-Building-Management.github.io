@@ -1,5 +1,6 @@
 ---
-layout: default
+layout: bios
 permalink: bios.html
 ---
-A VENIR
+
+TO COME

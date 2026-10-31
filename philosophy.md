@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: carousel
 permalink: philosophy.html
 ---
 <div class="row">

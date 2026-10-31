@@ -12,10 +12,14 @@
         </h1>
       </div>
       <div class="col-sm">
-        <idf-viewer src="/models/example.idf" style="height: 500px"></idf-viewer>
+        <div class="idf-viewer-container" style="position: relative;">
+          <idf-viewer id="building" src="/models/example.idf" style="height: 500px"></idf-viewer>
+          <idf-legend viewer="building"></idf-legend>
+        </div>
       </div>
   </main>
   <script type="module" src="/lib/modules/components/idf-viewer.js"></script>
+  <script type="module" src="/lib/modules/components/idf-legend.js"></script>
   <script>
     const models = [
       'example.idf',

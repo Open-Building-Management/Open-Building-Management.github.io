@@ -5,8 +5,11 @@
 <body>
   <obm-site-nav></obm-site-nav>
   <main class="container-fluid">
+    <idf-viewer src="/models/example.idf" style="height: 500px"></idf-viewer>
+
     {{ content }}
   </main>
+  <script type="module" src="/lib/modules/components/idf-viewer.js"></script>
   <obm-site-footer></obm-site-footer>
 </body>
 </html>

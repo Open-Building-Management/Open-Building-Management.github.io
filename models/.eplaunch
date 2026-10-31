@@ -1,0 +1,32 @@
+{
+  "workflows": {
+    "IDF Details": {
+      "files": {
+        "agence_acf.idf": {
+          "result": {
+            "Version": "*unknown*",
+            "# Design Days": 0,
+            "# Run Periods": 0,
+            "# Zones": 5
+          }
+        }
+      }
+    },
+    "Get File Details": {
+      "files": {
+        "agence_acf.idf": {
+          "result": {
+            "File Size [kB]": 225,
+            "File Type": ".idf"
+          }
+        },
+        "bardoux.idf": {
+          "result": {
+            "File Size [kB]": 267,
+            "File Type": ".idf"
+          }
+        }
+      }
+    }
+  }
+}

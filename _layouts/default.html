@@ -7,15 +7,18 @@
   <obm-site-nav></obm-site-nav>
   <main class="container-fluid">
     <div class="row">
+      <h1 class="display-5" data-i18n="home.master">
+        Maitrisez le fonctionnement de votre bâtiment à travers un jumeau numérique
+      </h1>
+    </div>
+    <div class="row">
       <div class="col">
-        <h1 class="display-5" data-i18n="home.master">
-          Maitrisez le fonctionnement de votre bâtiment à travers un jumeau numérique
-        </h1>
         <idf-legend viewer="building"></idf-legend>
       </div>
       <div class="col-sm">
         <idf-viewer id="building" src="/models/example.idf" style="height: 500px"></idf-viewer>
       </div>
+    </div>
   </main>
   </script>
   <script type="module" src="/lib/modules/components/idf-viewer.js"></script>

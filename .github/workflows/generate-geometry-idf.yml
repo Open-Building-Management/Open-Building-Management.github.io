@@ -140,11 +140,11 @@ jobs:
               )
 
           config_path = Path("conf_geometry/user_geometry.yml")
-          config_path.write_text(raw_yaml.rstrip() + "\\n", encoding="utf-8")
+          config_path.write_text(raw_yaml.rstrip() + "\n", encoding="utf-8")
 
           idf_path = f"{name}.idf"
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"idf_path={idf_path}\\n")
+              output.write(f"idf_path={idf_path}\n")
           print(f"Validated geometry configuration; expected output: {idf_path}")
           PY
 

@@ -1,0 +1,172 @@
+name: Generate geometry IDF
+
+on:
+  workflow_dispatch:
+    inputs:
+      ladybug_version:
+        description: "ladybug_codes tag, branch or commit"
+        required: true
+        default: "0.0.3"
+        type: string
+      geometry_yaml:
+        description: "Geometry configuration (YAML)"
+        required: true
+        type: string
+        default: |
+          name: example
+
+          blocks:
+            ss1_alt: &ss1_alt -4
+            rdc_alt: &rdc_alt 0
+            d0: 19
+            d3: 4
+            d4: 4
+            d5: 3
+            d8: 2.8
+            d9: 3
+            d10: 1.6
+            d11: 3.8
+            d911: d9+d10+d11
+            ss1_floor:
+              - [d0, 0, *ss1_alt]
+              - [d0, d3+d4+d5, *ss1_alt]
+              - [0, d3+d4+d5, *ss1_alt]
+              - [0, 0, *ss1_alt]
+            ss1_roof:
+              - [d0, d3+d4, *rdc_alt]
+              - [d0, d3+d4+d5, *rdc_alt]
+              - [0, d3+d4+d5, *rdc_alt]
+              - [0, d3+d4, *rdc_alt]
+            rdc_cage:
+              - [d9+d10, 0, *rdc_alt]
+              - [d9+d10, d8, *rdc_alt, air_boundary]
+              - [d911, d8, *rdc_alt]
+              - [d911, 0, *rdc_alt]
+            caves:
+              - [0, 0, *rdc_alt]
+              - rdc_cage
+              - ["d0", 0, *rdc_alt]
+              - ["d0", "d3+d4", *rdc_alt]
+              - [0, "d3+d4", *rdc_alt]
+
+          immeuble:
+            ss1:
+              height: 4
+              use_blocks_vars: 1
+              constructions:
+                default: townhouse_basement
+                exclude:
+                  roofs: [2]
+              floors: [ss1_floor]
+              roofs: [ss1_roof, caves, rdc_cage]
+              walls: [ss1_floor]
+            rdc:
+              height: 3
+              use_blocks_vars: 1
+              constructions:
+                floors: townhouse_basement
+              walls: [caves]
+              apertures:
+                5: [2, 1.4, 1.5, 1]
+              doors:
+                6: [1, 2, 3, 0]
+            rdc_cage:
+              height: 3
+              use_blocks_vars: 1
+              walls: [rdc_cage]
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    name: Generate geometry IDF
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout ladybug_codes
+        uses: actions/checkout@v6
+        with:
+          repository: Open-Building-Management/ladybug_codes
+          ref: ${{ inputs.ladybug_version }}
+          path: ladybug_codes
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ladybug_codes/pyproject.toml
+
+      - name: Install ladybug_codes and dependencies
+        working-directory: ladybug_codes
+        run: python -m pip install --upgrade pip && python -m pip install -e .
+
+      - name: Validate and write geometry YAML
+        id: validate
+        working-directory: ladybug_codes
+        env:
+          GEOMETRY_YAML: ${{ inputs.geometry_yaml }}
+        run: |
+          python - <<'PY'
+          import os
+          import re
+          import sys
+          from pathlib import Path
+
+          import yaml
+
+          raw_yaml = os.environ["GEOMETRY_YAML"]
+          if not raw_yaml.strip():
+              sys.exit("The geometry YAML input is empty.")
+          if len(raw_yaml) > 60_000:
+              sys.exit("The geometry YAML input exceeds 60,000 characters.")
+
+          try:
+              config = yaml.safe_load(raw_yaml)
+          except yaml.YAMLError as exc:
+              sys.exit(f"Invalid YAML: {exc}")
+
+          if not isinstance(config, dict):
+              sys.exit("The YAML document must contain a mapping at its root.")
+
+          name = config.get("name")
+          if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", name):
+              sys.exit(
+                  "The top-level 'name' must contain 1 to 64 letters, "
+                  "digits, underscores or hyphens, and must start with a letter or digit."
+              )
+
+          config_path = Path("conf_geometry/user_geometry.yml")
+          config_path.write_text(raw_yaml.rstrip() + "\\n", encoding="utf-8")
+
+          idf_path = f"{name}.idf"
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"idf_path={idf_path}\\n")
+          print(f"Validated geometry configuration; expected output: {idf_path}")
+          PY
+
+      - name: Generate geometry IDF
+        working-directory: ladybug_codes
+        run: python generate_geometry_from_yaml.py --geoconf=conf_geometry/user_geometry.yml
+
+      - name: Check generated IDF
+        working-directory: ladybug_codes
+        env:
+          IDF_PATH: ${{ steps.validate.outputs.idf_path }}
+        run: |
+          test -s "$IDF_PATH" || {
+            echo "::error::The geometry generator did not produce $IDF_PATH"
+            exit 1
+          }
+          echo "Generated $(wc -c < "$IDF_PATH") bytes in $IDF_PATH"
+
+      - name: Upload generated IDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: geometry-idf-${{ github.run_id }}
+          path: ladybug_codes/${{ steps.validate.outputs.idf_path }}
+          if-no-files-found: error
+          retention-days: 30

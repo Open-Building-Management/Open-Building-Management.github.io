@@ -100,6 +100,22 @@ jobs:
           cache: pip
           cache-dependency-path: ladybug_codes/pyproject.toml
 
+      # The 0.0.3 generator imports common.py, which loads Energy+.idd
+      # from configuration.yml even though this geometry-only job does not
+      # run EnergyPlus itself. Supply the matching IDD and override its path.
+      - name: Prepare EnergyPlus 24.1 IDD
+        run: |
+          curl --fail --location --retry 3 \
+            https://github.com/NatLabRockies/EnergyPlus/releases/download/v24.1.0/EnergyPlus-24.1.0-9d7789a3ac-Linux-Ubuntu22.04-x86_64.tar.gz \
+            --output /tmp/energyplus-24.1.0.tar.gz
+          mkdir -p /tmp/energyplus
+          tar -xzf /tmp/energyplus-24.1.0.tar.gz \
+            --wildcards '*/Energy+.idd' \
+            --strip-components=1 \
+            -C /tmp/energyplus
+          test -s /tmp/energyplus/Energy+.idd
+          sed -i 's|^os_ep_path:.*|os_ep_path: "/tmp/energyplus"|' ladybug_codes/configuration.yml
+
       - name: Install ladybug_codes and dependencies
         working-directory: ladybug_codes
         run: python -m pip install --upgrade pip && python -m pip install -e .

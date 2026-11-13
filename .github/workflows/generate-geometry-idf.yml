@@ -3,10 +3,10 @@ name: Generate geometry IDF
 on:
   workflow_dispatch:
     inputs:
-      ladybug_version:
-        description: "ladybug_codes tag, branch or commit"
+      image_tag:
+        description: "ladybug_codes GHCR image tag"
         required: true
-        default: "0.0.3"
+        default: "ep24.1.0-9d7789a3ac_idfhub0.0.4"
         type: string
       geometry_yaml:
         description: "Geometry configuration (YAML)"
@@ -76,7 +76,7 @@ on:
               walls: [rdc_cage]
 
 permissions:
-  contents: read
+  packages: read
 
 jobs:
   generate:
@@ -85,104 +85,62 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Checkout ladybug_codes
-        uses: actions/checkout@v6
-        with:
-          repository: Open-Building-Management/ladybug_codes
-          ref: ${{ inputs.ladybug_version }}
-          path: ladybug_codes
-          persist-credentials: false
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.11"
-          cache: pip
-          cache-dependency-path: ladybug_codes/pyproject.toml
-
-      # The 0.0.3 generator imports common.py, which loads Energy+.idd
-      # from configuration.yml even though this geometry-only job does not
-      # run EnergyPlus itself. Supply the matching IDD and override its path.
-      - name: Prepare EnergyPlus 24.1 IDD
-        run: |
-          curl --fail --location --retry 3 \
-            https://github.com/NatLabRockies/EnergyPlus/releases/download/v24.1.0/EnergyPlus-24.1.0-9d7789a3ac-Linux-Ubuntu22.04-x86_64.tar.gz \
-            --output /tmp/energyplus-24.1.0.tar.gz
-          mkdir -p /tmp/energyplus
-          tar -xzf /tmp/energyplus-24.1.0.tar.gz \
-            --wildcards '*/Energy+.idd' \
-            --strip-components=1 \
-            -C /tmp/energyplus
-          test -s /tmp/energyplus/Energy+.idd
-          sed -i 's|^os_ep_path:.*|os_ep_path: "/tmp/energyplus"|' ladybug_codes/configuration.yml
-
-      - name: Install ladybug_codes and dependencies
-        working-directory: ladybug_codes
-        run: python -m pip install --upgrade pip && python -m pip install -e .
-
       - name: Validate and write geometry YAML
-        id: validate
-        working-directory: ladybug_codes
+        id: geometry
         env:
           GEOMETRY_YAML: ${{ inputs.geometry_yaml }}
         run: |
-          python - <<'PY'
-          import os
-          import re
-          import sys
-          from pathlib import Path
+          if [[ -z "${GEOMETRY_YAML//[[:space:]]/}" ]]; then
+            echo "::error::The geometry YAML input is empty."
+            exit 1
+          fi
+          if (( ${#GEOMETRY_YAML} > 60000 )); then
+            echo "::error::The geometry YAML input exceeds 60,000 characters."
+            exit 1
+          fi
+          printf '%s\n' "$GEOMETRY_YAML" > geometry.yml
+          echo "Geometry YAML written to $GITHUB_WORKSPACE/geometry.yml"
 
-          import yaml
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-          raw_yaml = os.environ["GEOMETRY_YAML"]
-          if not raw_yaml.strip():
-              sys.exit("The geometry YAML input is empty.")
-          if len(raw_yaml) > 60_000:
-              sys.exit("The geometry YAML input exceeds 60,000 characters.")
-
-          try:
-              config = yaml.safe_load(raw_yaml)
-          except yaml.YAMLError as exc:
-              sys.exit(f"Invalid YAML: {exc}")
-
-          if not isinstance(config, dict):
-              sys.exit("The YAML document must contain a mapping at its root.")
-
-          name = config.get("name")
-          if not isinstance(name, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", name):
-              sys.exit(
-                  "The top-level 'name' must contain 1 to 64 letters, "
-                  "digits, underscores or hyphens, and must start with a letter or digit."
-              )
-
-          config_path = Path("conf_geometry/user_geometry.yml")
-          config_path.write_text(raw_yaml.rstrip() + "\n", encoding="utf-8")
-
-          idf_path = f"{name}.idf"
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
-              output.write(f"idf_path={idf_path}\n")
-          print(f"Validated geometry configuration; expected output: {idf_path}")
-          PY
+      - name: Pull geometry generator image
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          image="ghcr.io/open-building-management/ladybug_codes:$IMAGE_TAG"
+          docker pull "$image"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
 
       - name: Generate geometry IDF
-        working-directory: ladybug_codes
-        run: python generate_geometry_from_yaml.py --geoconf=conf_geometry/user_geometry.yml
+        run: |
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            "$IMAGE" \
+            python3 -m generate_geometry_from_yaml \
+              --conf=/opt/ladybug_codes/configuration.yml \
+              --geoconf=/workspace/geometry.yml
 
       - name: Check generated IDF
-        working-directory: ladybug_codes
-        env:
-          IDF_PATH: ${{ steps.validate.outputs.idf_path }}
+        id: output
         run: |
-          test -s "$IDF_PATH" || {
-            echo "::error::The geometry generator did not produce $IDF_PATH"
+          idf_file="$(find "$GITHUB_WORKSPACE" -maxdepth 1 -type f -name '*.idf' -print -quit)"
+          if [[ -z "$idf_file" || ! -s "$idf_file" ]]; then
+            echo "::error::The geometry generator did not produce a non-empty IDF file."
             exit 1
-          }
-          echo "Generated $(wc -c < "$IDF_PATH") bytes in $IDF_PATH"
+          fi
+          echo "idf_path=$idf_file" >> "$GITHUB_OUTPUT"
+          echo "Generated $(wc -c < "$idf_file") bytes in $(basename "$idf_file")"
 
       - name: Upload generated IDF
         uses: actions/upload-artifact@v4
         with:
           name: geometry-idf-${{ github.run_id }}
-          path: ladybug_codes/${{ steps.validate.outputs.idf_path }}
+          path: ${{ steps.output.outputs.idf_path }}
           if-no-files-found: error
           retention-days: 30

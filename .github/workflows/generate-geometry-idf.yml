@@ -1,0 +1,87 @@
+name: Generate geometry IDF
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "ladybug_codes GHCR image tag"
+        required: true
+        default: "ep24.1.0-9d7789a3ac_idfhub0.0.4"
+        type: string
+      geometry_yaml:
+        description: "Optional geometry configuration (YAML). Leave empty to use the bundled example."
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  packages: read
+
+jobs:
+  generate:
+    name: Generate geometry IDF
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Prepare geometry configuration
+        id: geometry
+        env:
+          GEOMETRY_YAML: ${{ inputs.geometry_yaml }}
+        run: |
+          if [[ -z "${GEOMETRY_YAML//[[:space:]]/}" ]]; then
+            echo "No geometry YAML provided; using the bundled example."
+            echo "config_path=/opt/ladybug_codes/conf_geometry/example.yml" >> "$GITHUB_OUTPUT"
+          else
+            if (( ${#GEOMETRY_YAML} > 60000 )); then
+              echo "::error::The geometry YAML input exceeds 60,000 characters."
+              exit 1
+            fi
+            printf '%s\n' "$GEOMETRY_YAML" > geometry.yml
+            echo "config_path=/workspace/geometry.yml" >> "$GITHUB_OUTPUT"
+            echo "Custom geometry YAML written to $GITHUB_WORKSPACE/geometry.yml"
+          fi
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull geometry generator image
+        env:
+          IMAGE_TAG: ${{ inputs.image_tag }}
+        run: |
+          image="ghcr.io/open-building-management/ladybug_codes:$IMAGE_TAG"
+          docker pull "$image"
+          echo "IMAGE=$image" >> "$GITHUB_ENV"
+
+      - name: Generate geometry IDF
+        run: |
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            "$IMAGE" \
+            python3 -m generate_geometry_from_yaml \
+              --conf=/opt/ladybug_codes/configuration.yml \
+              --geoconf="${{ steps.geometry.outputs.config_path }}"
+
+      - name: Check generated IDF
+        id: output
+        run: |
+          idf_file="$(find "$GITHUB_WORKSPACE" -maxdepth 1 -type f -name '*.idf' -print -quit)"
+          if [[ -z "$idf_file" || ! -s "$idf_file" ]]; then
+            echo "::error::The geometry generator did not produce a non-empty IDF file."
+            exit 1
+          fi
+          echo "idf_path=$idf_file" >> "$GITHUB_OUTPUT"
+          echo "Generated $(wc -c < "$idf_file") bytes in $(basename "$idf_file")"
+
+      - name: Upload generated IDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: geometry-idf-${{ github.run_id }}
+          path: ${{ steps.output.outputs.idf_path }}
+          if-no-files-found: error
+          retention-days: 30

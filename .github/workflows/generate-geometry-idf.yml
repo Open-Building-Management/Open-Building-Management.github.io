@@ -9,71 +9,10 @@ on:
         default: "ep24.1.0-9d7789a3ac_idfhub0.0.4"
         type: string
       geometry_yaml:
-        description: "Geometry configuration (YAML)"
-        required: true
+        description: "Optional geometry configuration (YAML). Leave empty to use the bundled example."
+        required: false
+        default: ""
         type: string
-        default: |
-          name: example
-
-          blocks:
-            ss1_alt: &ss1_alt -4
-            rdc_alt: &rdc_alt 0
-            d0: 19
-            d3: 4
-            d4: 4
-            d5: 3
-            d8: 2.8
-            d9: 3
-            d10: 1.6
-            d11: 3.8
-            d911: d9+d10+d11
-            ss1_floor:
-              - [d0, 0, *ss1_alt]
-              - [d0, d3+d4+d5, *ss1_alt]
-              - [0, d3+d4+d5, *ss1_alt]
-              - [0, 0, *ss1_alt]
-            ss1_roof:
-              - [d0, d3+d4, *rdc_alt]
-              - [d0, d3+d4+d5, *rdc_alt]
-              - [0, d3+d4+d5, *rdc_alt]
-              - [0, d3+d4, *rdc_alt]
-            rdc_cage:
-              - [d9+d10, 0, *rdc_alt]
-              - [d9+d10, d8, *rdc_alt, air_boundary]
-              - [d911, d8, *rdc_alt]
-              - [d911, 0, *rdc_alt]
-            caves:
-              - [0, 0, *rdc_alt]
-              - rdc_cage
-              - ["d0", 0, *rdc_alt]
-              - ["d0", "d3+d4", *rdc_alt]
-              - [0, "d3+d4", *rdc_alt]
-
-          immeuble:
-            ss1:
-              height: 4
-              use_blocks_vars: 1
-              constructions:
-                default: townhouse_basement
-                exclude:
-                  roofs: [2]
-              floors: [ss1_floor]
-              roofs: [ss1_roof, caves, rdc_cage]
-              walls: [ss1_floor]
-            rdc:
-              height: 3
-              use_blocks_vars: 1
-              constructions:
-                floors: townhouse_basement
-              walls: [caves]
-              apertures:
-                5: [2, 1.4, 1.5, 1]
-              doors:
-                6: [1, 2, 3, 0]
-            rdc_cage:
-              height: 3
-              use_blocks_vars: 1
-              walls: [rdc_cage]
 
 permissions:
   packages: read
@@ -85,21 +24,23 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - name: Validate and write geometry YAML
+      - name: Prepare geometry configuration
         id: geometry
         env:
           GEOMETRY_YAML: ${{ inputs.geometry_yaml }}
         run: |
           if [[ -z "${GEOMETRY_YAML//[[:space:]]/}" ]]; then
-            echo "::error::The geometry YAML input is empty."
-            exit 1
+            echo "No geometry YAML provided; using the bundled example."
+            echo "config_path=/opt/ladybug_codes/conf_geometry/example.yml" >> "$GITHUB_OUTPUT"
+          else
+            if (( ${#GEOMETRY_YAML} > 60000 )); then
+              echo "::error::The geometry YAML input exceeds 60,000 characters."
+              exit 1
+            fi
+            printf '%s\\n' "$GEOMETRY_YAML" > geometry.yml
+            echo "config_path=/workspace/geometry.yml" >> "$GITHUB_OUTPUT"
+            echo "Custom geometry YAML written to $GITHUB_WORKSPACE/geometry.yml"
           fi
-          if (( ${#GEOMETRY_YAML} > 60000 )); then
-            echo "::error::The geometry YAML input exceeds 60,000 characters."
-            exit 1
-          fi
-          printf '%s\n' "$GEOMETRY_YAML" > geometry.yml
-          echo "Geometry YAML written to $GITHUB_WORKSPACE/geometry.yml"
 
       - name: Login to GHCR
         uses: docker/login-action@v3
@@ -118,13 +59,13 @@ jobs:
 
       - name: Generate geometry IDF
         run: |
-          docker run --rm \
-            --volume "$GITHUB_WORKSPACE:/workspace" \
-            --workdir /workspace \
-            "$IMAGE" \
-            python3 -m generate_geometry_from_yaml \
-              --conf=/opt/ladybug_codes/configuration.yml \
-              --geoconf=/workspace/geometry.yml
+          docker run --rm \\
+            --volume "$GITHUB_WORKSPACE:/workspace" \\
+            --workdir /workspace \\
+            "$IMAGE" \\
+            python3 -m generate_geometry_from_yaml \\
+              --conf=/opt/ladybug_codes/configuration.yml \\
+              --geoconf="${{ steps.geometry.outputs.config_path }}"
 
       - name: Check generated IDF
         id: output

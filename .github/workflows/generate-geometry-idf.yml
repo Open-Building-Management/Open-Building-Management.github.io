@@ -37,7 +37,7 @@ jobs:
               echo "::error::The geometry YAML input exceeds 60,000 characters."
               exit 1
             fi
-            printf '%s\\n' "$GEOMETRY_YAML" > geometry.yml
+            printf '%s\n' "$GEOMETRY_YAML" > geometry.yml
             echo "config_path=/workspace/geometry.yml" >> "$GITHUB_OUTPUT"
             echo "Custom geometry YAML written to $GITHUB_WORKSPACE/geometry.yml"
           fi
@@ -59,12 +59,12 @@ jobs:
 
       - name: Generate geometry IDF
         run: |
-          docker run --rm \\
-            --volume "$GITHUB_WORKSPACE:/workspace" \\
-            --workdir /workspace \\
-            "$IMAGE" \\
-            python3 -m generate_geometry_from_yaml \\
-              --conf=/opt/ladybug_codes/configuration.yml \\
+          docker run --rm \
+            --volume "$GITHUB_WORKSPACE:/workspace" \
+            --workdir /workspace \
+            "$IMAGE" \
+            python3 -m generate_geometry_from_yaml \
+              --conf=/opt/ladybug_codes/configuration.yml \
               --geoconf="${{ steps.geometry.outputs.config_path }}"
 
       - name: Check generated IDF

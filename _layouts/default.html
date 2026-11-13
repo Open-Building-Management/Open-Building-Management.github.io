@@ -2,6 +2,8 @@
   <head>
     {% include three-imports.html %}
     {% include head.html %}
+    <script type="module" src="/lib/modules/components/idf-viewer.js"></script>
+    <script type="module" src="/lib/modules/components/idf-legend.js"></script>
   </head>
 <body>
   <obm-site-nav></obm-site-nav>
@@ -20,9 +22,6 @@
       </div>
     </div>
   </main>
-  </script>
-  <script type="module" src="/lib/modules/components/idf-viewer.js"></script>
-  <script type="module" src="/lib/modules/components/idf-legend.js"></script>
   <script>
     const models = [
       'bardoux.idf',

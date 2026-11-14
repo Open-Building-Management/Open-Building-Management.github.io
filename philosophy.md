@@ -9,7 +9,7 @@ permalink: philosophy.html
       <p data-i18n="philosophy.paragraph2">Pourtant, s'il y a bien une population pour qui l'exploitation de la donnée peut s'avérer fondamentale, c'est bien celle-là.</p>
       <p data-i18n="philosophy.paragraph3">OBM veut créer une plateforme tech qui changerait le quotidien des agents de terrain, en remplaçant intégralement le modèle productiviste du passé par un modèle centré client.</p>
       <p data-i18n="philosophy.paragraph4">C'est pourquoi nous faisons le choix de nous intéresser de près au hardware et aux actionneurs. Nous ne voulons pas d'un nouveau produit se rajoutant verticalement aux logiciels existants, mais changer de paradigme pour révolutionner les métiers de la maintenance.</p>
-      <a class="btn btn-success" href="/philosophy3D.html" data-i18n="philosophy.view3d">Passer à la version 3D</a>
+      <a class="btn btn-success" href="/gallery.html" data-i18n="philosophy.view3d">Passer à la version 3D</a>
     </div>
     <div class="col-sm" id="cta">
       <obm-carousel data-i18n-attr="aria-label:philosophy.actuatorExamples">

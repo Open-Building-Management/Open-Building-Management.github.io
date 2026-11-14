@@ -7,12 +7,16 @@
 <body>
   <obm-site-nav></obm-site-nav>
   <main class="container-fluid">
-    <collada-viewer style="height: 500px">
-      <collada-object file="v3v" position="0 0 0"></collada-object>
-      <collada-object file="pompe" position="2 0 0"></collada-object>
-      <collada-object file="bruleur" position="4 0 0"
-                      rotation="0 90 0" scale="0.8"></collada-object>
-    </collada-viewer>
+    <div class="row">
+      <div class="col-1">
+        <h1 class="display-5" data-i18n="gallery.build">
+          Organisez votre système énergétique
+        </h1>
+      </div>
+      <div class="col-2">
+        {{ content }}
+      </div>
+    </div>
   </main>
   <obm-site-footer></obm-site-footer>
 </body>

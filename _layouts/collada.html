@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+  <head>
+    {% include three-imports.html %}
+    {% include head.html %}
+    <script type="module" src="/lib/modules/components/obm-collada-viewer.js"></script>
+  </head>
+<body>
+  <obm-site-nav></obm-site-nav>
+  <main class="container-fluid">
+    <collada-viewer style="height: 500px">
+      <collada-object file="v3v" position="0 0 0"></collada-object>
+      <collada-object file="pompe" position="2 0 0"></collada-object>
+      <collada-object file="bruleur" position="4 0 0"
+                      rotation="0 90 0" scale="0.8"></collada-object>
+    </collada-viewer>
+  </main>
+  <obm-site-footer></obm-site-footer>
+</body>
+</html>
+

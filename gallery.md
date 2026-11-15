@@ -1,6 +1,6 @@
 ---
 layout: collada
-permalink: gallery.html
+permalink: /gallery/
 ---
 <collada-viewer zoom="250%" zoom-mobile="150%">
   <collada-object

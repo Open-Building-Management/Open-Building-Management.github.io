@@ -1,6 +1,6 @@
 ---
 layout: bios
-permalink: bios.html
+permalink: /bios/
 ---
 
 TO COME

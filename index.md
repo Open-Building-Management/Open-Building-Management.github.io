@@ -1,6 +1,5 @@
 ---
 layout: default
-permalink: index.html
 ---
 <div class="row">
   <div class="col">

@@ -2,7 +2,7 @@
 layout: collada
 permalink: /gallery/
 ---
-<collada-viewer zoom="250%" zoom-mobile="150%" axes=10>
+<collada-viewer zoom="300%" zoom-mobile="150%" axes=10 camera-rotation="20 0 0">
   <collada-object
     file="v3v"
     position="-1 -1.8 0"

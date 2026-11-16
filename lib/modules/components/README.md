@@ -15,6 +15,7 @@ attribut | description
 zoom | facteur de zoom sur desktop (par exemple "150%)
 zoom-mobile | facteur de zoom sur mobile
 axes | longueur des axes. Si cet attribut n'est pas présent, les axes ne sont pas affichés
+camera-rotation | angles en degrés définissant l'orientation initiale de la caméra 
 
 ![](images/axes.jpg)
 

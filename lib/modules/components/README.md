@@ -20,7 +20,7 @@ camera-rotation | angles en degrés définissant l'orientation initiale de la c
 ![](images/axes.jpg)
 
 
-`<collada-wall>`
+``<wall>``
 
 attribut | description
 --|--

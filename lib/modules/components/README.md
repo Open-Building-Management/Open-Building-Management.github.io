@@ -21,6 +21,14 @@ report-mouse-position | affiche les coordonnées X, Y, Z du point situé sous la
 ![](images/axes.jpg)
 
 
+``<pipe>``
+
+attribut | description
+--|--
+points | succession de points 3D séparés par des points-virgules, chaque point étant défini par X Y Z
+radius | rayon du tuyau (default: 0.1)
+color | couleur au format hexadécimal (default: #808080)
+
 ``<wall>``
 
 attribut | description

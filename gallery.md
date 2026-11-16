@@ -18,6 +18,11 @@ permalink: /gallery/
     position="6 -5 0"
     rotation="0 0 0"
   ></collada-object>
+  <pipe
+    points="0 0 0; 2 0 0; 2 2 0; 2 2 3"
+    radius="0.1"
+    color="#ff0000"
+  ></pipe>
   <wall
     position="-5 -5 -25"
     width="0.15"

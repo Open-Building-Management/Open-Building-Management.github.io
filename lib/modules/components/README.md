@@ -1,4 +1,4 @@
-# <collada-object>
+`<collada-object>`
 
 attribut | description
 --|--
@@ -8,7 +8,7 @@ rotation | angles en degrés autour des axes X Y Z
 scale | un facteur unique ou trois facteurs X Y Z, tous entre 0 et 1  ("0.8" pour mettre à 80%)
 hide-lines | masque les arêtes si attribut présent (pas de valeur à spécifier)
 
-# <collada-viewer>
+`<collada-viewer>`
 
 attribut | description
 --|--
@@ -19,7 +19,7 @@ axes | longueur des axes. Si cet attribut n'est pas présent, les axes ne sont 
 ![](images/axes.jpg)
 
 
-# <collada-wall>
+`<collada-wall>`
 
 attribut | description
 --|--

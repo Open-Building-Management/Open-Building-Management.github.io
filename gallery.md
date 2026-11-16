@@ -18,4 +18,18 @@ permalink: /gallery/
     position="6 -5 0"
     rotation="0 0 0"
   ></collada-object>
+  <collada-wall
+    position="-5 -5 -25"
+    width="0.15"
+    height="10"
+    depth="40"
+    opacity="0.9">
+  </collada-wall>
+  <collada-wall
+    position="-5 -5 -25"
+    width="20"
+    height="10"
+    depth="0.15"
+    opacity="0.9">
+  </collada-wall>
 </collada-viewer>

@@ -28,6 +28,7 @@ attribut | description
 points | succession de points 3D séparés par des points-virgules, chaque point étant défini par X Y Z
 radius | rayon du tuyau (default: 0.1)
 color | couleur au format hexadécimal (default: #808080)
+style | `smooth` (courbe fluide, default) ou `industrial` (segments droits et coudes arrondis)
 
 ``<wall>``
 

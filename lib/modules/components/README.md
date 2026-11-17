@@ -29,6 +29,7 @@ points | succession de points 3D séparés par des points-virgules, chaque point
 radius | rayon du tuyau (default: 0.1)
 color | couleur au format hexadécimal (default: #808080)
 style | `smooth` (courbe fluide, default) ou `industrial` (segments droits et coudes arrondis)
+closed | ferme les deux extrémités du tuyau (attribut booléen, activé par sa présence)
 
 ``<wall>``
 

@@ -23,6 +23,7 @@ permalink: /gallery/
     radius="0.1"
     color="#ff0000"
     style="industrial"
+    closed
   ></pipe>
   <wall
     position="-5 -5 -25"

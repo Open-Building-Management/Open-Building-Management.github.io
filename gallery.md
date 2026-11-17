@@ -22,6 +22,7 @@ permalink: /gallery/
     points="0 0 0; 2 0 0; 2 2 0; 2 2 3"
     radius="0.1"
     color="#ff0000"
+    style="industrial"
   ></pipe>
   <wall
     position="-5 -5 -25"

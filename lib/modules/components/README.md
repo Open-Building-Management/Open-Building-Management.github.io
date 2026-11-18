@@ -27,13 +27,6 @@ updated 350 ms after the last edit.
   `<collada-viewer>` and are not edited in the text area.
 - Only direct `collada-object`, `pipe` and `wall` declarations are accepted.
 
-`<collada-object>`, `<pipe>` and `<wall>` declarations in the text area.
-- Valid changes are applied to the preview without replacing unchanged source elements.
-- Invalid or incomplete declarations are reported and leave the last valid scene visible.
-- **Reset** restores the initial declarations.
-- The viewer-level attributes (camera, zoom, axes, etc.) remain on the original
-  `<collada-viewer>` and are not edited in the text area.
-- Only direct `collada-object`, `pipe` and `wall` declarations are accepted.
 
 `<collada-object>`
 

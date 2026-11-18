@@ -1,0 +1,71 @@
+/* Grille des actualités */
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(min(100%, 280px), 340px)
+    );
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+/* Card */
+.news-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    border: var(--obm-border-width) solid var(--obm-border);
+    border-radius: var(--obm-radius);
+
+    background: #fff;
+    color: #202020;
+    text-decoration: none;
+
+    transition:
+        transform 180ms ease,
+        box-shadow 180ms ease,
+        background-color 180ms ease,
+        color 180ms ease;
+}
+
+/* Titre */
+.news-card h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+/* Catégorie et date */
+.news-card .meta {
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Description */
+.news-card p {
+    margin: 0;
+    line-height: 1.55;
+}
+
+/* Survol */
+.news-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 4px 4px 0 var(--obm-border);
+    background-color: var(--obm-border);
+    color: white;
+}
+
+/* Clavier */
+.news-card:focus-visible {
+    outline: 3px solid #3978c5;
+    outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .news-card {
+        transition: none;
+    } 
+}

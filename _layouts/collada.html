@@ -7,6 +7,22 @@
   </head>
 <body>
   {% include menu.html %}
+  <style>
+    .scene-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .scene-workspace > * {
+      min-width: 0;
+    }
+    @media (max-width: 800px) {
+      .scene-workspace {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  </style>
   <main class="container-fluid">
     <div class="row">
       <div class="col">

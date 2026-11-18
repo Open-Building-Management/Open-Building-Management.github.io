@@ -2,8 +2,8 @@
 layout: collada
 permalink: /gallery/
 ---
-<collada-viewer zoom="300%" zoom-mobile="150%" axes=10 camera-rotation="20 0 0"
-  report-mouse-position>
+<collada-viewer id="scene-1" zoom="300%" zoom-mobile="150%" axes="10"
+  camera-rotation="20 0 0" report-mouse-position>
   <pipe
     points="-1.21 2 0; -1.21 8 0"
     radius="0.35"
@@ -85,3 +85,4 @@ permalink: /gallery/
     opacity="0.9">
   </wall>
 </collada-viewer>
+<collada-scene-editor target="scene-1"></collada-scene-editor>

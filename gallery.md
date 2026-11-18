@@ -85,4 +85,4 @@ permalink: /gallery/
     opacity="0.9">
   </wall>
 </collada-viewer>
-<collada-scene-editor target="scene-1"></collada-scene-editor>>
+<collada-scene-editor target="scene-1"></collada-scene-editor>

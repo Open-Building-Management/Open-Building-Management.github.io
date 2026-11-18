@@ -1,19 +1,33 @@
 `<collada-scene-editor>`
 
-Wraps one `<collada-viewer>` and provides a live HTML editor for its declarative
-scene elements. The preview is updated 350 ms after the last edit.
+Provides a live HTML editor for the scene declarations of a target
+`<collada-viewer>`. The editor and viewer are independent elements; the
+`target` attribute references the viewer's standard HTML `id`. The preview is
+updated 350 ms after the last edit.
 
 ```html
-<collada-scene-editor>
-  <collada-viewer axes="5">
+<div class="scene-workspace">
+  <collada-scene-editor target="scene-1"></collada-scene-editor>
+
+  <collada-viewer id="scene-1" axes="5">
     <collada-object file="pump" position="0 0 0"></collada-object>
     <pipe points="0 0 0; 2 0 0" radius="0.1"></pipe>
     <wall position="0 0 0" width="5" height="2" depth="0.15"></wall>
   </collada-viewer>
-</collada-scene-editor>
+</div>
 ```
 
 - Edit the `<collada-object>`, `<pipe>` and `<wall>` declarations in the text area.
+- Set `target` to the `id` of the viewer to edit; do not include a leading `#`.
+- The editor waits if the target viewer has not yet been added to the document.
+- Valid changes are applied to the target viewer without replacing unchanged source elements.
+- Invalid or incomplete declarations are reported and leave the last valid scene visible.
+- **Reset** restores the declarations captured when the editor first connects to its target.
+- Viewer-level attributes (camera, zoom, axes, etc.) remain on the original
+  `<collada-viewer>` and are not edited in the text area.
+- Only direct `collada-object`, `pipe` and `wall` declarations are accepted.
+
+`<collada-object>`, `<pipe>` and `<wall>` declarations in the text area.
 - Valid changes are applied to the preview without replacing unchanged source elements.
 - Invalid or incomplete declarations are reported and leave the last valid scene visible.
 - **Reset** restores the initial declarations.

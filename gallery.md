@@ -3,23 +3,25 @@ layout: collada
 permalink: /gallery/
 ---
 <collada-viewer id="scene-1" zoom="300%" zoom-mobile="150%" axes="10"
-  camera-rotation="20 0 0" report-mouse-position>
+  camera-rotation="20 0 0"
+  background="#cccccc"
+  report-mouse-position>
   <pipe
     points="-1.21 2 0; -1.21 8 0"
     radius="0.35"
-    color="#ffffff"
+    color="#bbbbbb"
     style="industrial"
   ></pipe>
   <pipe
     points="-3.5 -5 0; -3.5 8 0"
     radius="0.35"
-    color="#ffffff"
+    color="#aaaaaa"
     style="industrial"
   ></pipe>
   <pipe
     points="-1 -2 0; -3.5 -2 0"
     radius="0.35"
-    color="#ffffff"
+    color="#cccccc"
     style="industrial"
   ></pipe>
   <collada-object
@@ -36,7 +38,7 @@ permalink: /gallery/
   <pipe
     points="-1.21 -0.5 0; -1.21 -5 0"
     radius="0.35"
-    color="#ffffff"
+    color="#eeefff"
     style="industrial"
   ></pipe>
   <collada-object
@@ -59,14 +61,14 @@ permalink: /gallery/
   <pipe
     points="-1 -4.2 -10; -1 -4.2 10"
     radius="1"
-    color="#ffffff"
+    color="#eeeccc"
     style="industrial"
     closed
   ></pipe>
   <pipe
     points="-3.5 -4.2 -15; -3.5 -4.2 5"
     radius="1"
-    color="#ffffff"
+    color="#bebebe"
     style="industrial"
     closed
   ></pipe>

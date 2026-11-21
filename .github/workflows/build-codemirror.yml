@@ -1,0 +1,55 @@
+name: Build CodeMirror bundle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Bundle CodeMirror and YAML language support
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: build/codemirror
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pinned dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Build ES module bundle
+        run: |
+          mkdir -p dist
+          npx esbuild src/index.js \
+            --bundle \
+            --format=esm \
+            --target=es2022 \
+            --outfile=dist/codemirror.js
+
+      - name: Check bundle
+        run: |
+          test -s dist/codemirror.js
+          if grep -Eq 'from ["'\''/](@codemirror|codemirror)|import\(["'\''/](@codemirror|codemirror)' dist/codemirror.js; then
+            echo "::error::The bundle still contains an external CodeMirror import."
+            exit 1
+          fi
+          echo "Bundle size: $(wc -c < dist/codemirror.js) bytes"
+
+      - name: Upload CodeMirror bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: codemirror-6.0.2-yaml-6.1.3
+          path: build/codemirror/dist/codemirror.js
+          if-no-files-found: error
+          retention-days: 30

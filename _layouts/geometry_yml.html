@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+  <head>
+    {% include three-imports.html %}
+    {% include head.html %}
+    <script type="module" src="/lib/modules/components/idf-viewer.js"></script>
+    <script type="module" src="/lib/modules/components/idf-legend.js"></script>
+    <script type="module" src="/lib/modules/components/geometry-editor.js"></script>
+  </head>
+<body>
+  {% include menu.html %}
+  <main class="container-fluid">
+    <div class="scene-workspace">
+      <geometry-yml-editor></geometry-yml-editor>
+      <idf-viewer id="building" src=""></idf-viewer>
+    </div>
+  </main>
+  <obm-site-footer></obm-site-footer>
+</body>
+</html>

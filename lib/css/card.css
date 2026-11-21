@@ -69,3 +69,54 @@
         transition: none;
     } 
 }
+
+/* puces */
+.news-card ul,
+.news-card ol {
+    margin: 0.75rem 0;
+    padding-left: 1.4rem;
+}
+
+.news-card li {
+    margin-bottom: 0.35rem;
+    line-height: 1.45;
+}
+
+/* puces icones */
+.news-card ul.icon-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 1rem 0;
+}
+
+.news-card ul.icon-list li {
+    list-style: none;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    margin-bottom: 0.6rem;
+}
+
+.news-card ul.icon-list li::before {
+    content: "";
+    display: block;
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    background-color: currentColor;
+    mask: var(--icon) center / contain no-repeat;
+    -webkit-mask: var(--icon) center / contain no-repeat;
+}
+
+.icon-list li.wrench {
+    --icon: url("/img/icons/wrench.svg");
+}
+
+.icon-list .circle-check {
+    --icon: url("/img/icons/circle-check.svg");
+}
+
+.icon-list .euro {
+    --icon: url("/img/icons/euro.svg");
+}

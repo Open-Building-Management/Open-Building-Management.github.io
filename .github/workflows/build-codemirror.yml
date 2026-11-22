@@ -83,6 +83,9 @@ jobs:
             "@codemirror/lang-yaml@${LANG_YAML_VERSION}" \
             "esbuild@${ESBUILD_VERSION}"
 
+      - name: Generate CodeMirror entry point
+        run: python3 scripts/generate_entry.py "${BASE_PACKAGES}"
+
       - id: js
         name: Set js name
         run: |

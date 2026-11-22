@@ -19,10 +19,8 @@ by the deployed site.
 
 ## Browser usage
 
-The bundle exposes the same three named exports as the current esm.sh imports:
-
 ```js
-import { EditorView, basicSetup, yaml } from
+import { EditorView, basicSetup, autocompletion, yaml } from
   "/vendor/codemirror/xxxxxxxxx.js";
 ```
 

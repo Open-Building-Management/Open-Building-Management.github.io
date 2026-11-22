@@ -40,7 +40,7 @@ permalink: /gallery/philosophy/
         </div>
         <div class="carousel-slide">
           <img
-            src=src="{{ '/img/burner.png' | relative_url }}"
+            src="{{ '/img/burner.png' | relative_url }}"
             alt="Brûleur gaz"
             data-i18n-attr="alt:philosophy.burner">
           <div class="caption"><h5 data-i18n="philosophy.burner">Brûleur gaz</h5></div>

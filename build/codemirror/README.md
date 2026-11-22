@@ -6,11 +6,7 @@ bundle. It is deliberately separate from the static site runtime.
 ## Build
 
 Run the **Build CodeMirror bundle** workflow manually from GitHub Actions.
-The workflow exposes three version inputs:
-
-- `codemirror_version`: version of `codemirror` (default: `6.0.2`)
-- `lang_yaml_version`: version of `@codemirror/lang-yaml` (default: `6.1.3`)
-- `esbuild_version`: version of `esbuild` (default: `0.25.11`)
+The workflow exposes some version inputs of components to bundle
 
 The selected packages are installed for that workflow run only. The output
 filename and artifact name include the selected versions. The artifact also
@@ -27,7 +23,7 @@ The bundle exposes the same three named exports as the current esm.sh imports:
 
 ```js
 import { EditorView, basicSetup, yaml } from
-  "/vendor/codemirror/codemirror-6.0.2-yaml-6.1.3.js";
+  "/vendor/codemirror/xxxxxxxxx.js";
 ```
 
 Replace the versioned filename with the one produced by the workflow run.

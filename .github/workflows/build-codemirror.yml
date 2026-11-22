@@ -8,6 +8,11 @@ on:
         required: true
         type: string
         default: "6.0.2"
+      autocompletion_version:
+        description: "Version of autocompletion"
+        required: true
+        type: string
+        default: "6.0.0"
       lang_yaml_version:
         description: "Version of @codemirror/lang-yaml"
         required: true
@@ -24,7 +29,7 @@ permissions:
 
 jobs:
   build:
-    name: Bundle CodeMirror and YAML language support
+    name: Bundle CodeMirror and utilities (such as YAML language support)
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -36,6 +41,7 @@ jobs:
       CODEMIRROR_VERSION: ${{ inputs.codemirror_version }}
       LANG_YAML_VERSION: ${{ inputs.lang_yaml_version }}
       ESBUILD_VERSION: ${{ inputs.esbuild_version }}
+      AUTOCOMPLETION_VERSION: ${{ inputs.autocompletion_version}}
 
     steps:
       - name: Checkout
@@ -50,12 +56,21 @@ jobs:
         run: |
           npm install --no-save --no-package-lock --no-audit --no-fund \
             "codemirror@${CODEMIRROR_VERSION}" \
+            "@codemirror/autocomplete@{AUTOCOMPLETION_VERSION}" \
             "@codemirror/lang-yaml@${LANG_YAML_VERSION}" \
             "esbuild@${ESBUILD_VERSION}"
 
+      - id: js
+        name: Set js name
+        run: |
+          t0="cm-${CODEMIRROR_VERSION}"
+          t1="-yaml-${LANG_YAML_VERSION}"
+          t2="-autocmp-${AUTOCOMPLETION_VERSION}"
+          echo "name=$t0$t1$t2" >> "$GITHUB_OUTPUT"
+
       - name: Build ES module bundle
         run: |
-          OUTPUT="dist/codemirror-${CODEMIRROR_VERSION}-yaml-${LANG_YAML_VERSION}.js"
+          OUTPUT="dist/${{ steps.js.outputs.name }}.js"
           mkdir -p dist
           ./node_modules/.bin/esbuild src/index.js \
             --bundle \
@@ -76,7 +91,7 @@ jobs:
       - name: Upload CodeMirror bundle
         uses: actions/upload-artifact@v7
         with:
-          name: codemirror-${{ inputs.codemirror_version }}-yaml-${{ inputs.lang_yaml_version }}-esbuild-${{ inputs.esbuild_version }}
-          path: build/codemirror/dist/codemirror-${{ inputs.codemirror_version }}-yaml-${{ inputs.lang_yaml_version }}.js
+          name: codemirror-${{ steps.js.outputs.name }}-${{ inputs.esbuild_version }}
+          path: build/codemirror/dist/${{ steps.js.outputs.name }}.js
           if-no-files-found: error
           retention-days: 30

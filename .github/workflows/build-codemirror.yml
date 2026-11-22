@@ -2,6 +2,22 @@ name: Build CodeMirror bundle
 
 on:
   workflow_dispatch:
+    inputs:
+      codemirror_version:
+        description: "Version of codemirror"
+        required: true
+        type: string
+        default: "6.0.2"
+      lang_yaml_version:
+        description: "Version of @codemirror/lang-yaml"
+        required: true
+        type: string
+        default: "6.1.3"
+      esbuild_version:
+        description: "Version of esbuild (build tool)"
+        required: true
+        type: string
+        default: "0.25.11"
 
 permissions:
   contents: read
@@ -16,6 +32,11 @@ jobs:
       run:
         working-directory: build/codemirror
 
+    env:
+      CODEMIRROR_VERSION: ${{ inputs.codemirror_version }}
+      LANG_YAML_VERSION: ${{ inputs.lang_yaml_version }}
+      ESBUILD_VERSION: ${{ inputs.esbuild_version }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -25,31 +46,37 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install pinned dependencies
-        run: npm install --no-audit --no-fund
+      - name: Install selected dependencies
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund \
+            "codemirror@${CODEMIRROR_VERSION}" \
+            "@codemirror/lang-yaml@${LANG_YAML_VERSION}" \
+            "esbuild@${ESBUILD_VERSION}"
 
       - name: Build ES module bundle
         run: |
+          OUTPUT="dist/codemirror-${CODEMIRROR_VERSION}-yaml-${LANG_YAML_VERSION}.js"
           mkdir -p dist
-          npx esbuild src/index.js \
+          ./node_modules/.bin/esbuild src/index.js \
             --bundle \
             --format=esm \
             --target=es2022 \
-            --outfile=dist/codemirror.js
+            --outfile="${OUTPUT}"
+          echo "BUNDLE_FILE=${OUTPUT}" >> "$GITHUB_ENV"
 
       - name: Check bundle
         run: |
-          test -s dist/codemirror.js
-          if grep -Eq 'from ["'\''/](@codemirror|codemirror)|import\(["'\''/](@codemirror|codemirror)' dist/codemirror.js; then
+          test -s "${BUNDLE_FILE}"
+          if grep -Eq 'from ["'\''/](@codemirror|codemirror)|import\(["'\''/](@codemirror|codemirror)' "${BUNDLE_FILE}"; then
             echo "::error::The bundle still contains an external CodeMirror import."
             exit 1
           fi
-          echo "Bundle size: $(wc -c < dist/codemirror.js) bytes"
+          echo "Bundle size: $(wc -c < "${BUNDLE_FILE}") bytes"
 
       - name: Upload CodeMirror bundle
         uses: actions/upload-artifact@v4
         with:
-          name: codemirror-6.0.2-yaml-6.1.3
-          path: build/codemirror/dist/codemirror.js
+          name: codemirror-${{ inputs.codemirror_version }}-yaml-${{ inputs.lang_yaml_version }}-esbuild-${{ inputs.esbuild_version }}
+          path: build/codemirror/dist/codemirror-${{ inputs.codemirror_version }}-yaml-${{ inputs.lang_yaml_version }}.js
           if-no-files-found: error
           retention-days: 30

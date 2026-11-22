@@ -53,6 +53,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Generate CodeMirror entry point
+        run: python3 scripts/generate_entry.py "${BASE_PACKAGES}"
+
       - name: Install selected dependencies
         shell: bash
         run: |
@@ -82,9 +85,6 @@ jobs:
             "${BASE_INSTALL_ARGS[@]}" \
             "@codemirror/lang-yaml@${LANG_YAML_VERSION}" \
             "esbuild@${ESBUILD_VERSION}"
-
-      - name: Generate CodeMirror entry point
-        run: python3 scripts/generate_entry.py "${BASE_PACKAGES}"
 
       - id: js
         name: Set js name

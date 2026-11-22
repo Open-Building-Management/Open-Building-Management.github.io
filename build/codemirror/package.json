@@ -4,6 +4,6 @@
   "type": "module",
   "description": "Build-time configuration for the OBM CodeMirror browser bundle.",
   "scripts": {
-    "build": "esbuild src/index.js --bundle --format=esm --target=es2022"
+    "build": "esbuild src/index.js --bundle --format=esm --target=es2022 --outfile=dist/codemirror.js"
   }
 }

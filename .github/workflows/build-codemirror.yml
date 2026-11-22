@@ -9,10 +9,10 @@ on:
         type: string
         default: "6.0.2"
       base:
-        description: "Base CodeMirror packages as package:version pairs, comma-separated"
+        description: "CodeMirror base packages as package:version pairs, comma-separated"
         required: true
         type: string
-        default: "@codemirror/autocomplete:6.0.0,@codemirror/language:6.0.0"
+        default: "autocomplete:6.0.0,language:6.0.0"
       lang_yaml_version:
         description: "Version of @codemirror/lang-yaml"
         required: true
@@ -40,6 +40,7 @@ jobs:
     env:
       CODEMIRROR_VERSION: ${{ inputs.codemirror_version }}
       BASE_PACKAGES: ${{ inputs.base }}
+      BASE_SCOPE: "@codemirror"
       LANG_YAML_VERSION: ${{ inputs.lang_yaml_version }}
       ESBUILD_VERSION: ${{ inputs.esbuild_version }}
 
@@ -62,13 +63,13 @@ jobs:
             package="${spec%%:*}"
             version="${spec#*:}"
 
-            if [[ "${spec}" != *:* || "${package}" != @codemirror/* || -z "${version}" ]]; then
+            if [[ "${spec}" != *:* || ! "${package}" =~ ^[a-z0-9-]+$ || -z "${version}" ]]; then
               echo "::error::Invalid base package specification: ${spec}"
-              echo "Expected comma-separated @codemirror/package:version pairs."
+              echo "Expected comma-separated package:version pairs (without the @codemirror scope)."
               exit 1
             fi
 
-            BASE_INSTALL_ARGS+=("${package}@${version}")
+            BASE_INSTALL_ARGS+=("${BASE_SCOPE}/${package}@${version}")
           done
 
           if [[ ${#BASE_INSTALL_ARGS[@]} -eq 0 ]]; then
@@ -87,7 +88,7 @@ jobs:
         run: |
           t0="cm-${CODEMIRROR_VERSION}"
           t1="-yaml-${LANG_YAML_VERSION}"
-          base_tag="$(printf '%s' "${BASE_PACKAGES}" | sed -E 's/@//g; s#/#-#g; s/:/-/g; s/,/_/g')"
+          base_tag="$(printf '%s' "${BASE_PACKAGES}" | sed -E 's/:/-/g; s/,/_/g')"
           t2="-base-${base_tag}"
           echo "name=${t0}${t1}${t2}" >> "$GITHUB_OUTPUT"
 

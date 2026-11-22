@@ -8,11 +8,11 @@ on:
         required: true
         type: string
         default: "6.0.2"
-      autocompletion_version:
-        description: "Version of @codemirror/autocomplete"
+      base:
+        description: "Base CodeMirror packages as package:version pairs, comma-separated"
         required: true
         type: string
-        default: "6.0.0"
+        default: "@codemirror/autocomplete:6.0.0,@codemirror/language:6.0.0"
       lang_yaml_version:
         description: "Version of @codemirror/lang-yaml"
         required: true
@@ -39,9 +39,9 @@ jobs:
 
     env:
       CODEMIRROR_VERSION: ${{ inputs.codemirror_version }}
+      BASE_PACKAGES: ${{ inputs.base }}
       LANG_YAML_VERSION: ${{ inputs.lang_yaml_version }}
       ESBUILD_VERSION: ${{ inputs.esbuild_version }}
-      AUTOCOMPLETION_VERSION: ${{ inputs.autocompletion_version}}
 
     steps:
       - name: Checkout
@@ -53,10 +53,32 @@ jobs:
           node-version: 22
 
       - name: Install selected dependencies
+        shell: bash
         run: |
+          BASE_INSTALL_ARGS=()
+          IFS=',' read -r -a BASE_SPECS <<< "${BASE_PACKAGES}"
+
+          for spec in "${BASE_SPECS[@]}"; do
+            package="${spec%%:*}"
+            version="${spec#*:}"
+
+            if [[ "${spec}" != *:* || "${package}" != @codemirror/* || -z "${version}" ]]; then
+              echo "::error::Invalid base package specification: ${spec}"
+              echo "Expected comma-separated @codemirror/package:version pairs."
+              exit 1
+            fi
+
+            BASE_INSTALL_ARGS+=("${package}@${version}")
+          done
+
+          if [[ ${#BASE_INSTALL_ARGS[@]} -eq 0 ]]; then
+            echo "::error::The base input must contain at least one package."
+            exit 1
+          fi
+
           npm install --no-save --no-package-lock --no-audit --no-fund \
             "codemirror@${CODEMIRROR_VERSION}" \
-            "@codemirror/autocomplete@${AUTOCOMPLETION_VERSION}" \
+            "${BASE_INSTALL_ARGS[@]}" \
             "@codemirror/lang-yaml@${LANG_YAML_VERSION}" \
             "esbuild@${ESBUILD_VERSION}"
 
@@ -65,8 +87,9 @@ jobs:
         run: |
           t0="cm-${CODEMIRROR_VERSION}"
           t1="-yaml-${LANG_YAML_VERSION}"
-          t2="-autocmp-${AUTOCOMPLETION_VERSION}"
-          echo "name=$t0$t1$t2" >> "$GITHUB_OUTPUT"
+          base_tag="$(printf '%s' "${BASE_PACKAGES}" | sed -E 's/@//g; s#/#-#g; s/:/-/g; s/,/_/g')"
+          t2="-base-${base_tag}"
+          echo "name=${t0}${t1}${t2}" >> "$GITHUB_OUTPUT"
 
       - name: Build ES module bundle
         run: |

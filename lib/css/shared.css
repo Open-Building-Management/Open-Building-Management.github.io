@@ -4,6 +4,14 @@ html, body {
     position: relative;
     margin: 10px;
 }
+code {
+    background-color: #f1f3f5;
+    color: #d63384;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
 .container-fluid { width: 100%; }
 .row {
     display: flex;

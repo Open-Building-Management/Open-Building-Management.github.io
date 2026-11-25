@@ -149,29 +149,8 @@ jobs:
           mkdir -p vendor/codemirror
           cp "${source}" "${target}"
 
-          python3 - "${BUNDLE_NAME}" <<'PY'
-          import re
-          import sys
-          from pathlib import Path
+          python3 build/codemirror/scripts/update_component_import.py "${BUNDLE_NAME}"
 
-          bundle_name = sys.argv[1]
-          component = Path("lib/modules/components/geometry-editor.js")
-          content = component.read_text(encoding="utf-8")
-
-          pattern = re.compile(r'(["\'])/vendor/codemirror/[^"\']+\.js\1')
-          matches = list(pattern.finditer(content))
-          if len(matches) != 1:
-              raise SystemExit(
-                  f"Expected exactly one CodeMirror bundle import in {component}; "
-                  f"found {len(matches)}."
-              )
-
-          quote = matches[0].group(1)
-          replacement = f'{quote}/vendor/codemirror/{bundle_name}.js{quote}'
-          updated = pattern.sub(lambda _: replacement, content, count=1)
-          component.write_text(updated, encoding="utf-8")
-          print(f"Updated CodeMirror import in {component}")
-          PY
 
       - name: Create or update CodeMirror bump pull request
         if: ${{ inputs.produce_pr_to_bump_lib }}

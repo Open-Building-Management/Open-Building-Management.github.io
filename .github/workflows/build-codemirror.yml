@@ -92,8 +92,7 @@ jobs:
           t0="cm-${CODEMIRROR_VERSION}"
           t1="-yaml-${LANG_YAML_VERSION}"
           base_tag="$(printf '%s' "${BASE_PACKAGES}" | sed -E 's/:/-/g; s/,/_/g')"
-          t2="-base-${base_tag}"
-          echo "name=${t0}${t1}${t2}" >> "$GITHUB_OUTPUT"
+          echo "name=${t0}${t1}-${base_tag}" >> "$GITHUB_OUTPUT"
 
       - name: Build ES module bundle
         run: |

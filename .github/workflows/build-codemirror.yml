@@ -138,6 +138,10 @@ jobs:
         run: |
           set -euo pipefail
 
+          branch="automation/bump-codemirror-${BUNDLE_NAME}"
+          git fetch origin main
+          git switch --force-create "${branch}" origin/main
+
           source="build/codemirror/dist/${BUNDLE_NAME}.js"
           target="vendor/codemirror/${BUNDLE_NAME}.js"
 
@@ -182,10 +186,6 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          # Always build the bump branch from the current main branch.
-          git fetch origin main
-          git switch --force-create "${branch}" origin/main
 
           git add \
             "vendor/codemirror/${BUNDLE_NAME}.js" \

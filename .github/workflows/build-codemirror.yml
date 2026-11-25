@@ -117,7 +117,7 @@ jobs:
       - name: Upload CodeMirror bundle
         uses: actions/upload-artifact@v7
         with:
-          name: codemirror-${{ steps.js.outputs.name }}-${{ inputs.esbuild_version }}
+          name: ${{ steps.js.outputs.name }}-esbuild${{ inputs.esbuild_version }}
           path: build/codemirror/dist/${{ steps.js.outputs.name }}.js
           if-no-files-found: error
           retention-days: 30
